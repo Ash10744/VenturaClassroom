@@ -1,0 +1,196 @@
+
+<img width="1909" height="824" alt="VenturaClassroom" src="https://github.com/user-attachments/assets/df65d2d8-aeca-409f-a8c4-deca11b482bc" />
+
+# VenturaClassroom
+
+Run real lessons on your server. Schedule classes by real-world day and time (or on a repeating timer), let students join with one click, then teleport everyone in, teach, and grade and dismiss them — with optional money and XP rewards. Comes with a month calendar, a click-through setup wizard, and a clean in-game help menu.
+
+---
+
+## Requirements
+
+- **Spigot or Paper 1.21 or newer**
+- **Java 21**
+
+Optional, Extra features:
+
+- **[Vault](https://www.spigotmc.org/resources/vault.34315/)** + any economy plugin
+- **[PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/)** — for `%venturaclasses_...%` placeholders
+
+
+---
+
+## Installation
+
+1. Drop `VenturaClassroom.jar` into your `plugins` folder.
+2. (Optional) Install Vault + an economy plugin and/or PlaceholderAPI.
+3. Restart the server.
+
+---
+
+## Getting started
+
+The fastest way is the guided wizard:
+
+1. Run `/class setup`
+2. Type the class name in chat (spaces are fine, e.g. `Maths 101`)
+3. Click a player to be the teacher
+4. Stand where students should arrive and click **[Set Warp Here]**
+5. Click the day(s) and a time, then a duration
+6. Done — it gives you **[Start now] [Info] [Calendar]** buttons
+
+Prefer to do it by hand? It's just as quick:
+
+1. `/class create Maths 101` — creates the class (it's given a number as its id)
+2. `/class setteacher 1 Steve` — assign the teacher
+3. `/class setwarp 1` — set where students arrive (stand there first)
+4. `/class settime 1 weekdays 9am` — schedule it
+
+You can refer to a class by its **id** (`1`) or its **name** (`Maths 101`) in any command.
+
+---
+
+## Running a lesson
+
+Classes start on their own at the scheduled time, or a teacher can start one manually. There are two steps so students have a moment to join:
+
+1. `/class start 1` — announces the class and opens it for joining. Everyone online gets a clickable **[Join]** message.
+2. Students click to join (or run `/class join 1`).
+3. `/class begin 1` — teleports everyone who joined to the warp and locks the class so no one else wanders in.
+
+When you're finished:
+
+- `/class dismiss <player>` — opens a menu to pick a grade for one student; they get that grade's rewards and leave.
+- `/class dismiss all 1` — dismisses everyone still in the class.
+
+---
+
+## Setting times
+
+Classes use **real-world** time, not in-game time.
+
+Set a day and a time:
+
+```
+/class settime 1 monday 9am
+/class settime 1 weekdays 2:30pm
+/class settime 1 weekend 14:00
+```
+
+Days can be `monday`-`sunday`, or `daily`, `weekdays`, `weekend`. Times can be written `9am`, `2:30pm`, `14:00`, `noon` or `midnight`.
+
+Or run it on a **repeating timer** instead — every hour, every 30 minutes, every 90 seconds:
+
+```
+/class settime 1 every 1h
+/class settime 1 every 30m
+/class settime 1 every 90s
+```
+
+Set how long a lesson lasts and it'll end on its own:
+
+```
+/class setduration 1 1h
+/class setduration 1 90m
+```
+
+---
+
+## Grades and rewards
+
+Grades are defined in `config.yml`. Each grade can hand out money, XP, a message, and run **any console commands** — so you can plug rewards into any other plugin:
+
+```yaml
+grades:
+  A:
+    money: 500.0
+    xp: 30
+    message: "&aExcellent work! You earned an A in %class%."
+    commands:
+      - "give %player% diamond 2"
+```
+
+Placeholders you can use anywhere in a grade: `%player%`, `%class%`, `%grade%`, `%money%`, `%xp%`.
+
+Grade a student when you dismiss them with `/class dismiss <player>`, or pre-set grades during the lesson with `/class grade 1 Steve A` and apply them all at once with `/class dismiss all 1`.
+
+---
+
+## The calendar
+
+`/class calendar` opens a month view. Today is highlighted green, and days with classes are highlighted — hover a day to see its classes, or click it to open that day and click a class for its details. Use the arrows to flip between months.
+
+---
+
+## Commands
+
+You can use a class **id** or **name** anywhere `<name>` appears.
+
+**Players** — `venturaclasses.use` (default: everyone)
+
+| Command | What it does | Permission |
+|---------|--------------|------------|
+| `/class help` | Open the help menu | `venturaclasses.use` |
+| `/class list` | List all classes | `venturaclasses.use` |
+| `/class info <name>` | Show a class's details | `venturaclasses.use` |
+| `/class calendar` | Open the month calendar | `venturaclasses.use` |
+| `/class next` | See which class is on next | `venturaclasses.use` |
+| `/class join <name>` | Join a class that's open | `venturaclasses.use` |
+| `/class leave <name>` | Leave a class | `venturaclasses.use` |
+| `/class submit` | Hand in the item you're holding | `venturaclasses.use` |
+
+**Teachers** — the class's assigned teacher/assistant, or `venturaclasses.admin`
+
+| Command | What it does | Permission |
+|---------|--------------|------------|
+| `/class start <name>` | Announce the class and open joining | `venturaclasses.teacher` |
+| `/class begin <name>` | Teleport everyone in and lock the class | `venturaclasses.teacher` |
+| `/class end <name>` | End the class | `venturaclasses.teacher` |
+| `/class warp <name>` | Teleport yourself to the class location | `venturaclasses.teacher` |
+| `/class lock` / `unlock <name>` | Stop / allow new students joining | `venturaclasses.teacher` |
+| `/class capacity <name> <n>` | Set the student limit | `venturaclasses.teacher` |
+| `/class giveitem <name>` | Give the item in your hand to every student | `venturaclasses.teacher` |
+| `/class grade <name> <player> <grade>` | Pre-set a student's grade | `venturaclasses.teacher` |
+| `/class dismiss <player>` | Grade & dismiss one student via a menu | `venturaclasses.teacher` |
+| `/class dismiss all <name>` | Dismiss everyone left | `venturaclasses.teacher` |
+| `/class submissions <name>` | View what students handed in | `venturaclasses.teacher` |
+
+**Admins** — `venturaclasses.admin` (default: ops)
+
+| Command | What it does | Permission |
+|---------|--------------|------------|
+| `/class setup` | Guided step-by-step class setup | `venturaclasses.admin` |
+| `/class create <name...>` | Create a class (name can have spaces) | `venturaclasses.admin` |
+| `/class delete <name>` | Delete a class | `venturaclasses.admin` |
+| `/class setname <name> <display...>` | Rename a class | `venturaclasses.admin` |
+| `/class setteacher <name> <player>` | Assign the teacher | `venturaclasses.admin` |
+| `/class addsub` / `removesub <name> <player>` | Add / remove an assistant teacher | `venturaclasses.admin` |
+| `/class setwarp <name>` | Set the warp to where you stand | `venturaclasses.admin` |
+| `/class settime <name> <day> <time>` | Add a day & time | `venturaclasses.admin` |
+| `/class settime <name> every <interval>` | Run on a repeating timer (e.g. `every 1h`) | `venturaclasses.admin` |
+| `/class deltime <name> <day> <time>` | Remove a day & time | `venturaclasses.admin` |
+| `/class setduration <name> <length>` | Set how long a lesson runs (e.g. `1h`, `90m`) | `venturaclasses.admin` |
+| `/class reload` | Reload `config.yml` | `venturaclasses.admin` |
+
+The command also answers to `/classes`, `/classroom`, `/vclass` and `/vclassroom`.
+
+### About permissions
+
+| Permission | Default | Grants |
+|------------|---------|--------|
+| `venturaclasses.use` | everyone | Join and view classes (all player commands) |
+| `venturaclasses.teacher` | ops | Marks a player as a teacher and shows teacher commands in tab-complete |
+| `venturaclasses.admin` | ops | Create and configure any class, and run every command |
+
+Teacher commands run for the class's **assigned teacher or assistant** (set with `/class setteacher` and `/class addsub`), or for anyone with `venturaclasses.admin`. A teacher only manages the classes they're assigned to; admins can manage any class.
+
+---
+
+<img width="1562" height="1007" alt="899d187e-ec81-4f54-b5ec-394885bf580f" src="https://github.com/user-attachments/assets/0f55671e-24ef-46cc-bf9e-b7c9f3c33e72" />
+
+Need Support, Assistance or Help?
+Join the discord below or submit a report at my github!
+
+https://discord.gg/rRAXRbaJxz OR https://github.com/Ash10744/VenturaClassroom/issues
+
+---
