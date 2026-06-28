@@ -127,53 +127,63 @@ Grade a student when you dismiss them with `/class dismiss <player>`, or pre-set
 
 You can use a class **id** or **name** anywhere `<name>` appears.
 
-**Players**
+**Players** — `venturaclasses.use` (default: everyone)
 
-| Command | What it does |
-|---------|--------------|
-| `/class help` | Open the help menu |
-| `/class list` | List all classes |
-| `/class info <name>` | Show a class's details |
-| `/class calendar` | Open the month calendar |
-| `/class next` | See which class is on next |
-| `/class join <name>` | Join a class that's open |
-| `/class leave <name>` | Leave a class |
-| `/class submit` | Hand in the item you're holding |
+| Command | What it does | Permission |
+|---------|--------------|------------|
+| `/class help` | Open the help menu | `venturaclasses.use` |
+| `/class list` | List all classes | `venturaclasses.use` |
+| `/class info <name>` | Show a class's details | `venturaclasses.use` |
+| `/class calendar` | Open the month calendar | `venturaclasses.use` |
+| `/class next` | See which class is on next | `venturaclasses.use` |
+| `/class join <name>` | Join a class that's open | `venturaclasses.use` |
+| `/class leave <name>` | Leave a class | `venturaclasses.use` |
+| `/class submit` | Hand in the item you're holding | `venturaclasses.use` |
 
-**Teachers**
+**Teachers** — the class's assigned teacher/assistant, or `venturaclasses.admin`
 
-| Command | What it does |
-|---------|--------------|
-| `/class start <name>` | Announce the class and open joining |
-| `/class begin <name>` | Teleport everyone in and lock the class |
-| `/class end <name>` | End the class |
-| `/class warp <name>` | Teleport yourself to the class location |
-| `/class lock` / `unlock <name>` | Stop / allow new students joining |
-| `/class capacity <name> <n>` | Set the student limit |
-| `/class giveitem <name>` | Give the item in your hand to every student |
-| `/class grade <name> <player> <grade>` | Pre-set a student's grade |
-| `/class dismiss <player>` | Grade & dismiss one student via a menu |
-| `/class dismiss all <name>` | Dismiss everyone left |
-| `/class submissions <name>` | View what students handed in |
+| Command | What it does | Permission |
+|---------|--------------|------------|
+| `/class start <name>` | Announce the class and open joining | `venturaclasses.teacher` |
+| `/class begin <name>` | Teleport everyone in and lock the class | `venturaclasses.teacher` |
+| `/class end <name>` | End the class | `venturaclasses.teacher` |
+| `/class warp <name>` | Teleport yourself to the class location | `venturaclasses.teacher` |
+| `/class lock` / `unlock <name>` | Stop / allow new students joining | `venturaclasses.teacher` |
+| `/class capacity <name> <n>` | Set the student limit | `venturaclasses.teacher` |
+| `/class giveitem <name>` | Give the item in your hand to every student | `venturaclasses.teacher` |
+| `/class grade <name> <player> <grade>` | Pre-set a student's grade | `venturaclasses.teacher` |
+| `/class dismiss <player>` | Grade & dismiss one student via a menu | `venturaclasses.teacher` |
+| `/class dismiss all <name>` | Dismiss everyone left | `venturaclasses.teacher` |
+| `/class submissions <name>` | View what students handed in | `venturaclasses.teacher` |
 
-**Admins**
+**Admins** — `venturaclasses.admin` (default: ops)
 
-| Command | What it does |
-|---------|--------------|
-| `/class setup` | Guided step-by-step class setup |
-| `/class create <name...>` | Create a class (name can have spaces) |
-| `/class delete <name>` | Delete a class |
-| `/class setname <name> <display...>` | Rename a class |
-| `/class setteacher <name> <player>` | Assign the teacher |
-| `/class addsub` / `removesub <name> <player>` | Add / remove an assistant teacher |
-| `/class setwarp <name>` | Set the warp to where you stand |
-| `/class settime <name> <day> <time>` | Add a day & time |
-| `/class settime <name> every <interval>` | Run on a repeating timer (e.g. `every 1h`) |
-| `/class deltime <name> <day> <time>` | Remove a day & time |
-| `/class setduration <name> <length>` | Set how long a lesson runs (e.g. `1h`, `90m`) |
-| `/class reload` | Reload `config.yml` |
+| Command | What it does | Permission |
+|---------|--------------|------------|
+| `/class setup` | Guided step-by-step class setup | `venturaclasses.admin` |
+| `/class create <name...>` | Create a class (name can have spaces) | `venturaclasses.admin` |
+| `/class delete <name>` | Delete a class | `venturaclasses.admin` |
+| `/class setname <name> <display...>` | Rename a class | `venturaclasses.admin` |
+| `/class setteacher <name> <player>` | Assign the teacher | `venturaclasses.admin` |
+| `/class addsub` / `removesub <name> <player>` | Add / remove an assistant teacher | `venturaclasses.admin` |
+| `/class setwarp <name>` | Set the warp to where you stand | `venturaclasses.admin` |
+| `/class settime <name> <day> <time>` | Add a day & time | `venturaclasses.admin` |
+| `/class settime <name> every <interval>` | Run on a repeating timer (e.g. `every 1h`) | `venturaclasses.admin` |
+| `/class deltime <name> <day> <time>` | Remove a day & time | `venturaclasses.admin` |
+| `/class setduration <name> <length>` | Set how long a lesson runs (e.g. `1h`, `90m`) | `venturaclasses.admin` |
+| `/class reload` | Reload `config.yml` | `venturaclasses.admin` |
 
 The command also answers to `/classes`, `/classroom`, `/vclass` and `/vclassroom`.
+
+### About permissions
+
+| Permission | Default | Grants |
+|------------|---------|--------|
+| `venturaclasses.use` | everyone | Join and view classes (all player commands) |
+| `venturaclasses.teacher` | ops | Marks a player as a teacher and shows teacher commands in tab-complete |
+| `venturaclasses.admin` | ops | Create and configure any class, and run every command |
+
+Teacher commands run for the class's **assigned teacher or assistant** (set with `/class setteacher` and `/class addsub`), or for anyone with `venturaclasses.admin`. A teacher only manages the classes they're assigned to; admins can manage any class.
 
 ---
 
@@ -185,12 +195,9 @@ Scheduling runs on the **server's real-world clock**, so a class set for "Monday
 
 Money rewards need **Vault** and an economy plugin; without them, the money part of a grade is simply skipped and everything else still works.
 
-Permissions: `venturaclasses.use` (join and view, default on), `venturaclasses.teacher` (run your own classes), `venturaclasses.admin` (create and configure).
-
 ---
 
-<!-- Replace the line below with a screenshot of your own -->
-<img width="700" alt="VenturaClassroom" src="REPLACE_WITH_YOUR_IMAGE_URL" />
+<img width="1562" height="1007" alt="899d187e-ec81-4f54-b5ec-394885bf580f" src="https://github.com/user-attachments/assets/0f55671e-24ef-46cc-bf9e-b7c9f3c33e72" />
 
 Need Support, Assistance or Help?
 Join the discord below or submit a report at my github!
