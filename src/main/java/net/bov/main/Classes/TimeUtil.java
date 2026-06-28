@@ -72,33 +72,14 @@ public final class TimeUtil {
             return null;
         }
         switch (input.trim().toUpperCase(Locale.ROOT)) {
-            case "MON":
-            case "MONDAY":
-                return DayOfWeek.MONDAY;
-            case "TUE":
-            case "TUES":
-            case "TUESDAY":
-                return DayOfWeek.TUESDAY;
-            case "WED":
-            case "WEDS":
-            case "WEDNESDAY":
-                return DayOfWeek.WEDNESDAY;
-            case "THU":
-            case "THUR":
-            case "THURS":
-            case "THURSDAY":
-                return DayOfWeek.THURSDAY;
-            case "FRI":
-            case "FRIDAY":
-                return DayOfWeek.FRIDAY;
-            case "SAT":
-            case "SATURDAY":
-                return DayOfWeek.SATURDAY;
-            case "SUN":
-            case "SUNDAY":
-                return DayOfWeek.SUNDAY;
-            default:
-                return null;
+            case "MON": case "MONDAY": return DayOfWeek.MONDAY;
+            case "TUE": case "TUES": case "TUESDAY": return DayOfWeek.TUESDAY;
+            case "WED": case "WEDS": case "WEDNESDAY": return DayOfWeek.WEDNESDAY;
+            case "THU": case "THUR": case "THURS": case "THURSDAY": return DayOfWeek.THURSDAY;
+            case "FRI": case "FRIDAY": return DayOfWeek.FRIDAY;
+            case "SAT": case "SATURDAY": return DayOfWeek.SATURDAY;
+            case "SUN": case "SUNDAY": return DayOfWeek.SUNDAY;
+            default: return null;
         }
     }
 
@@ -140,23 +121,64 @@ public final class TimeUtil {
 
     public static String dayShort(DayOfWeek day) {
         switch (day) {
-            case MONDAY:
-                return "Mon";
-            case TUESDAY:
-                return "Tue";
-            case WEDNESDAY:
-                return "Wed";
-            case THURSDAY:
-                return "Thu";
-            case FRIDAY:
-                return "Fri";
-            case SATURDAY:
-                return "Sat";
-            case SUNDAY:
-                return "Sun";
-            default:
-                return day.name();
+            case MONDAY: return "Mon";
+            case TUESDAY: return "Tue";
+            case WEDNESDAY: return "Wed";
+            case THURSDAY: return "Thu";
+            case FRIDAY: return "Fri";
+            case SATURDAY: return "Sat";
+            case SUNDAY: return "Sun";
+            default: return day.name();
         }
+    }
+
+    public static int parseDuration(String input) {
+        if (input == null) {
+            return -1;
+        }
+        String s = input.trim().toLowerCase(Locale.ROOT);
+        if (s.isEmpty()) {
+            return -1;
+        }
+        if (s.matches("\\d+")) {
+            return Integer.parseInt(s) * 60;
+        }
+        if (!s.matches("(\\d+[hms])+")) {
+            return -1;
+        }
+        Matcher m = Pattern.compile("(\\d+)([hms])").matcher(s);
+        int total = 0;
+        while (m.find()) {
+            int val = Integer.parseInt(m.group(1));
+            if (m.group(2).equals("h")) {
+                total += val * 3600;
+            } else if (m.group(2).equals("m")) {
+                total += val * 60;
+            } else {
+                total += val;
+            }
+        }
+        return total;
+    }
+
+    public static String formatDuration(int seconds) {
+        if (seconds <= 0) {
+            return "none";
+        }
+        int h = seconds / 3600;
+        int m = (seconds % 3600) / 60;
+        int s = seconds % 60;
+        StringBuilder sb = new StringBuilder();
+        if (h > 0) {
+            sb.append(h).append("h ");
+        }
+        if (m > 0) {
+            sb.append(m).append("m ");
+        }
+        if (s > 0 || sb.length() == 0) {
+            sb.append(s).append("s");
+        }
+        return sb.toString().trim();
     }
 
     public static String prettyUntil(Duration duration) {
@@ -179,9 +201,5 @@ public final class TimeUtil {
             sb.append(mins).append("m");
         }
         return sb.toString().trim();
-    }
-
-    public static String prettyDuration(Duration wait) {
-        return "";
     }
 }

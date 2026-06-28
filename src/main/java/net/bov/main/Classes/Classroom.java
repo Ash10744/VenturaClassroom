@@ -18,6 +18,7 @@ public class Classroom {
     private final Set<UUID> subTeachers = new LinkedHashSet<>();
     private Location location;
     private int capacity = 30;
+    private int durationSeconds = 0;
     private final TreeSet<ClassTime> times = new TreeSet<>();
 
     private boolean inSession = false;
@@ -73,6 +74,14 @@ public class Classroom {
 
     public void setCapacity(int capacity) {
         this.capacity = Math.max(1, capacity);
+    }
+
+    public int getDurationSeconds() {
+        return this.durationSeconds;
+    }
+
+    public void setDurationSeconds(int durationSeconds) {
+        this.durationSeconds = Math.max(0, durationSeconds);
     }
 
     public TreeSet<ClassTime> getTimes() {

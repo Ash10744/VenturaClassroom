@@ -13,6 +13,7 @@ public final class VenturaClassroom extends JavaPlugin {
     private final MainCommand mainCommand = new MainCommand();
     private ClassManager classManager;
     private EconomyHook economyHook;
+    private net.bov.main.Setup.SetupWizard setupWizard;
 
     public static VenturaClassroom getInstance() {
         return instance;
@@ -26,6 +27,10 @@ public final class VenturaClassroom extends JavaPlugin {
         return this.economyHook;
     }
 
+    public net.bov.main.Setup.SetupWizard getSetupWizard() {
+        return this.setupWizard;
+    }
+
     @Override
     public void onEnable() {
         instance = this;
@@ -36,9 +41,12 @@ public final class VenturaClassroom extends JavaPlugin {
         this.classManager.load();
         this.classManager.start();
 
+        this.setupWizard = new net.bov.main.Setup.SetupWizard(this);
+
         getServer().getPluginManager().registerEvents(new net.bov.main.Classes.SubmissionListener(), this);
         getServer().getPluginManager().registerEvents(new net.bov.main.GUI.CalendarListener(), this);
         getServer().getPluginManager().registerEvents(new net.bov.main.GUI.DismissListener(), this);
+        getServer().getPluginManager().registerEvents(new net.bov.main.Setup.SetupListener(), this);
 
         if (getServer().getPluginManager().getPlugin("Vault") != null) {
             EconomyHook hook = new EconomyHook();
@@ -61,7 +69,7 @@ public final class VenturaClassroom extends JavaPlugin {
             getLogger().severe("Command 'class' is not defined in plugin.yml!");
         }
 
-        getLogger().info("VenturaClasses enabled.");
+        getLogger().info("VenturaClassroom enabled.");
     }
 
     @Override

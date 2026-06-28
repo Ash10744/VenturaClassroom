@@ -5,11 +5,37 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6c9bebfc-a42e-4257-be36-0413607bed28" name="Changes" comment="0.5 - CalendarGUI, and Class reschedule and dismissal grades and config update">
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/GUI/DayClassesMenu.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Setup/SetupListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Setup/SetupSession.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Setup/SetupWizard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/ClassManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/ClassManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/Classroom.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/Classroom.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/TimeUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/TimeUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/bov/main/Commands/MainCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Commands/MainCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/bov/main/GUI/CalendarListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/GUI/CalendarListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/bov/main/GUI/CalendarMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/GUI/CalendarMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/bov/main/Libs/Libs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Libs/Libs.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/bov/main/VenturaClassroom.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/VenturaClassroom.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/ClassManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/ClassManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/Classroom.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/Classroom.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/EconomyHook.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/TimeUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/TimeUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/Commands/MainCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Commands/MainCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/GUI/CalendarMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/GUI/CalendarMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/Integrations/VClassExpansion.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Integrations/VClassExpansion.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/Libs/Libs$ChatComponent.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Libs/Libs$ChatComponent.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/Libs/Libs.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Libs/Libs.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/VenturaClassroom.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/VenturaClassroom.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,8 +130,20 @@
       <option name="project" value="LOCAL" />
       <updated>1782640940833</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="0.5 - CalendarGUI, and Class reschedule and dismissal grades and config update">
+      <option name="closed" value="true" />
+      <created>1782641225509</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1782641225509</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="java:org.spigotmc:spigot-api" />
+    <option featureType="dependencySupport" implementationName="java:net.kyori:adventure-api" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="0.1 - Beta" />

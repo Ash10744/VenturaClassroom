@@ -116,7 +116,47 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                 if (room == null) return true;
                 if (!staff(sender, room)) return noStaff(sender);
                 mgr().startClass(room);
-                sender.sendMessage(Libs.format(Libs.Prefix + "&aStarted &e" + room.getName() + "&a and announced it."));
+                sender.sendMessage(Libs.format(Libs.Prefix + "&aStarted &e" + room.getName()
+                        + "&a and opened it for joining. Use &e/class begin " + room.getId() + " &awhen ready."));
+                return true;
+            }
+
+            case "begin": {
+                Classroom room = need(sender, args, 1);
+                if (room == null) return true;
+                if (!staff(sender, room)) return noStaff(sender);
+                if (!room.isInSession()) {
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&cStart the class first with &e/class start " + room.getId() + "&c."));
+                    return true;
+                }
+                if (room.getLocation() == null) {
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&cSet a warp first with &e/class setwarp " + room.getId() + "&c."));
+                    return true;
+                }
+                mgr().beginClass(room);
+                for (UUID id : room.getStudents()) {
+                    Player s = Bukkit.getPlayer(id);
+                    if (s != null && s.isOnline()) {
+                        s.sendMessage(Libs.format(Libs.Prefix + "&eThe class has begun. Welcome to &6" + room.getName() + "&e!"));
+                    }
+                }
+                sender.sendMessage(Libs.format(Libs.Prefix + "&aBegan &e" + room.getName() + "&a, teleported &e"
+                        + room.getStudents().size() + " &astudent(s) and locked joining."));
+                return true;
+            }
+
+            case "warp": {
+                Player who = requirePlayer(sender);
+                if (who == null) return true;
+                Classroom room = need(sender, args, 1);
+                if (room == null) return true;
+                if (!staff(sender, room)) return noStaff(sender);
+                if (room.getLocation() == null) {
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&c" + room.getName() + " has no warp set yet."));
+                    return true;
+                }
+                who.teleport(room.getLocation());
+                who.sendMessage(Libs.format(Libs.Prefix + "&aWarped to &e" + room.getName() + "&a."));
                 return true;
             }
 
@@ -186,22 +226,32 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             case "create": {
                 if (!admin(sender)) return noPerm(sender);
                 if (args.length < 2) {
-                    sender.sendMessage(Libs.format(Libs.Prefix + "&cUsage: /class create <name>"));
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&cUsage: /class create <name...>  &7(name can have spaces)"));
                     return true;
                 }
-                String id = args[1].toLowerCase(Locale.ROOT);
+                StringBuilder nb = new StringBuilder();
+                for (int i = 1; i < args.length; i++) {
+                    nb.append(i > 1 ? " " : "").append(args[i]);
+                }
+                String display = nb.toString().trim();
+                String id = display.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]+", "_").replaceAll("^_+|_+$", "");
+                if (id.isEmpty()) {
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&cThat name can't be turned into a class id. Use letters or numbers."));
+                    return true;
+                }
                 if (mgr().get(id) != null) {
-                    sender.sendMessage(Libs.format(Libs.Prefix + "&cA class called &e" + id + " &calready exists."));
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&cA class with id &e" + id + " &calready exists."));
                     return true;
                 }
                 Classroom room = mgr().create(id);
+                room.setName(display);
                 room.setCapacity(VenturaClassroom.getInstance().getConfig().getInt("default-capacity", 30));
                 if (sender instanceof Player) {
                     room.setLocation(((Player) sender).getLocation());
                 }
                 mgr().save();
-                sender.sendMessage(Libs.format(Libs.Prefix + "&aCreated class &e" + id
-                        + "&a. Set a teacher with &e/class setteacher " + id + " <player>&a and times with &e/class settime " + id + " <time>&a."));
+                sender.sendMessage(Libs.format(Libs.Prefix + "&aCreated class &e" + display + " &7(id: &e" + id + "&7)."));
+                sender.sendMessage(Libs.format(Libs.Prefix + "&7Set a teacher with &e/class setteacher " + id + " <player>&7 and times with &e/class settime " + id + " <day> <time>&7."));
                 return true;
             }
 
@@ -268,7 +318,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            case "setlocation": {
+            case "setwarp": {
                 if (!admin(sender)) return noPerm(sender);
                 Player player = requirePlayer(sender);
                 if (player == null) return true;
@@ -276,7 +326,33 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                 if (room == null) return true;
                 room.setLocation(player.getLocation());
                 mgr().save();
-                sender.sendMessage(Libs.format(Libs.Prefix + "&aLocation for &e" + room.getName() + " &aset to where you are standing."));
+                sender.sendMessage(Libs.format(Libs.Prefix + "&aWarp for &e" + room.getName() + " &aset to where you are standing."));
+                return true;
+            }
+
+            case "setduration": {
+                if (!admin(sender)) return noPerm(sender);
+                Classroom room = need(sender, args, 1);
+                if (room == null) return true;
+                if (args.length < 3) {
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&cUsage: /class setduration <name> <length>  &7(e.g. 1h, 90m, 45s, 1h30m, or 'none')"));
+                    return true;
+                }
+                if (args[2].equalsIgnoreCase("none") || args[2].equals("0")) {
+                    room.setDurationSeconds(0);
+                    mgr().save();
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&aCleared the duration for &e" + room.getName() + "&a; it now runs until ended manually."));
+                    return true;
+                }
+                int secs = TimeUtil.parseDuration(args[2]);
+                if (secs <= 0) {
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&cInvalid length. Try &e1h&c, &e90m&c, &e45s&c or &e1h30m&c."));
+                    return true;
+                }
+                room.setDurationSeconds(secs);
+                mgr().save();
+                sender.sendMessage(Libs.format(Libs.Prefix + "&e" + room.getName() + " &awill run for &e"
+                        + TimeUtil.formatDuration(secs) + " &aonce started."));
                 return true;
             }
 
@@ -343,7 +419,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             case "calendar": {
                 Player player = requirePlayer(sender);
                 if (player == null) return true;
-                player.openInventory(new CalendarMenu(mgr().all()).getInventory());
+                player.openInventory(new CalendarMenu(java.time.YearMonth.now(), mgr().all()).getInventory());
                 return true;
             }
 
@@ -453,6 +529,14 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
 
+            case "setup": {
+                Player player = requirePlayer(sender);
+                if (player == null) return true;
+                if (!admin(sender)) return noPerm(sender);
+                VenturaClassroom.getInstance().getSetupWizard().handle(player, args);
+                return true;
+            }
+
             case "submit": {
                 Player player = requirePlayer(sender);
                 if (player == null) return true;
@@ -508,7 +592,9 @@ public class MainCommand implements CommandExecutor, TabCompleter {
     }
 
     private void info(CommandSender sender, Classroom room) {
-        sender.sendMessage(Libs.format("&8&m------------------&r &6" + room.getName() + " &8&m------------------"));
+        sender.sendMessage(Libs.format("&8&m---------------------------------------------|>"));
+        sender.sendMessage(Libs.format("&6  " + room.getName() + " &7(id: &e" + room.getId() + "&7)"));
+        sender.sendMessage(Libs.format("&8&m- - - - - - - - - - - - - - - - - - - - - - - -"));
         String teacher = room.getTeacher() == null ? "&cnone" : "&e" + nameOf(room.getTeacher());
         sender.sendMessage(Libs.format("&7Teacher: " + teacher));
         if (!room.getSubTeachers().isEmpty()) {
@@ -520,18 +606,29 @@ public class MainCommand implements CommandExecutor, TabCompleter {
         }
         sender.sendMessage(Libs.format("&7Students: &e" + room.getStudents().size() + "&7/&e" + room.getCapacity()));
         String status = room.isInSession()
-                ? (room.isJoinable() ? "&aIn session (open)" : "&eIn session (locked)")
+                ? (room.isJoinable() ? "&aIn session &7(open to join)" : "&eIn session &7(locked)")
                 : "&7Not running";
         sender.sendMessage(Libs.format("&7Status: " + status));
+        sender.sendMessage(Libs.format("&7Duration: &e"
+                + (room.getDurationSeconds() > 0 ? TimeUtil.formatDuration(room.getDurationSeconds()) : "until ended")));
+        sender.sendMessage(Libs.format("&7Warp: " + (room.getLocation() != null ? "&aset" : "&cnot set")));
         if (room.getTimes().isEmpty()) {
-            sender.sendMessage(Libs.format("&7Times: &cnone set"));
+            sender.sendMessage(Libs.format("&7Schedule: &cnone set"));
         } else {
-            StringBuilder sb = new StringBuilder();
+            sender.sendMessage(Libs.format("&7Schedule:"));
+            java.util.Map<java.time.DayOfWeek, java.util.List<java.time.LocalTime>> byDay = new java.util.LinkedHashMap<>();
             for (net.bov.main.Classes.ClassTime t : room.getTimes()) {
-                sb.append(sb.length() > 0 ? "&7, &e" : "&e").append(TimeUtil.dayShort(t.getDay()) + " " + TimeUtil.formatClock(t.getTime()));
+                byDay.computeIfAbsent(t.getDay(), k -> new java.util.ArrayList<>()).add(t.getTime());
             }
-            sender.sendMessage(Libs.format("&7Times: " + sb));
+            for (java.util.Map.Entry<java.time.DayOfWeek, java.util.List<java.time.LocalTime>> e : byDay.entrySet()) {
+                StringBuilder ts = new StringBuilder();
+                for (java.time.LocalTime lt : e.getValue()) {
+                    ts.append(ts.length() > 0 ? "&7, &f" : "&f").append(TimeUtil.formatClock(lt));
+                }
+                sender.sendMessage(Libs.format("&8  " + Libs.cmdstarter + "&e" + TimeUtil.dayShort(e.getKey()) + " &7- " + ts));
+            }
         }
+        sender.sendMessage(Libs.format("&8&m---------------------------------------------|>"));
     }
 
     private String nameOf(UUID uuid) {
@@ -638,7 +735,9 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             subs.add("help");
             if (sender.hasPermission("venturaclasses.teacher")) {
                 subs.add("start");
+                subs.add("begin");
                 subs.add("end");
+                subs.add("warp");
                 subs.add("lock");
                 subs.add("unlock");
                 subs.add("capacity");
@@ -649,14 +748,16 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             }
             if (sender.hasPermission("venturaclasses.admin")) {
                 subs.add("create");
+                subs.add("setup");
                 subs.add("delete");
                 subs.add("setname");
                 subs.add("setteacher");
                 subs.add("addsub");
                 subs.add("removesub");
-                subs.add("setlocation");
+                subs.add("setwarp");
                 subs.add("settime");
                 subs.add("deltime");
+                subs.add("setduration");
                 subs.add("reload");
             }
             return prefix(subs, args[0]);
@@ -685,6 +786,9 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                     out.add(p.getName());
                 }
                 return prefix(out, args[2]);
+            }
+            if (s.equals("setduration")) {
+                return prefix(java.util.Arrays.asList("30m", "45m", "1h", "90m", "2h", "none"), args[2]);
             }
             if (s.equals("dismiss") && args[1].equalsIgnoreCase("all")) {
                 for (Classroom room : mgr().all()) {

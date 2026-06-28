@@ -1,5 +1,5 @@
-name: VenturaClasses
-version: '0.5-BETA'
+name: VenturaClassroom
+version: '0.7-BETA'
 main: net.bov.main.VenturaClassroom
 api-version: '1.21'
 author: Ash10744
@@ -8,9 +8,9 @@ softdepend: [Vault, PlaceholderAPI]
 
 commands:
   class:
-    description: Main command for VenturaClasses
+    description: Main command for VenturaClassroom
     usage: /<command>
-    aliases: [classes, vclass]
+    aliases: [classes, classroom, vclass, vclassroom]
 
 permissions:
   venturaclasses.use:

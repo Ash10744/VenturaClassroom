@@ -6,8 +6,6 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Content;
-import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -21,7 +19,7 @@ public class Libs {
     }
 
     public String NewLine = "\n";
-    public String Prefix = "&8[&6VClasses&8] ";
+    public String Prefix = "&8[&6VClassroom&8] ";
     public String cmdstarter = format("◊ ");
     public String spacer = format(" &8- ");
     public String CommandDivider = format("&8&m---------------------------------------------|>");
@@ -91,6 +89,7 @@ public class Libs {
         }
 
         send(sender, NewLine);
+        send(sender, CommandDivider);
         Pager(sender, page, max);
         send(sender, CommandDivider);
         PluginInformation(sender);
@@ -108,8 +107,10 @@ public class Libs {
     }
 
     private void helpTeacher(CommandSender sender) {
-        helpLine(sender, "/class &fstart <name>", "Start your class now and open it for joining.", "/class start ");
+        helpLine(sender, "/class &fstart <name>", "Announce the class and open it for joining.", "/class start ");
+        helpLine(sender, "/class &fbegin <name>", "Teleport everyone who joined in and lock the class.", "/class begin ");
         helpLine(sender, "/class &fend <name>", "End your class and dismiss the students.", "/class end ");
+        helpLine(sender, "/class &fwarp <name>", "Teleport yourself to the class location.", "/class warp ");
         helpLine(sender, "/class &fgrade <name> <player> <grade>", "Pre-set a student's grade, applied when you dismiss the class.", "/class grade ");
         helpLine(sender, "/class &fdismiss <player>", "Open a grade menu to grade & dismiss one student.", "/class dismiss ");
         helpLine(sender, "/class &fdismiss all <name>", "Dismiss everyone left, applying any grades you set.", "/class dismiss all ");
@@ -121,32 +122,33 @@ public class Libs {
     }
 
     private void helpAdmin(CommandSender sender) {
-        helpLine(sender, "/class &fcreate <name>", "Create a new classroom.", "/class create ");
+        helpLine(sender, "/class &fsetup", "Guided step-by-step setup for a new class.", "/class setup");
+        helpLine(sender, "/class &fcreate <name...>", "Create a new classroom (name can have spaces).", "/class create ");
         helpLine(sender, "/class &fdelete <name>", "Delete a classroom.", "/class delete ");
-        helpLine(sender, "/class &fsetname <name> <display>", "Set the display name of a class.", "/class setname ");
+        helpLine(sender, "/class &fsetname <name> <display...>", "Set the display name of a class.", "/class setname ");
         helpLine(sender, "/class &fsetteacher <name> <player>", "Assign the teacher.", "/class setteacher ");
         helpLine(sender, "/class &faddsub <name> <player>", "Add a sub-teacher (assistant).", "/class addsub ");
         helpLine(sender, "/class &fremovesub <name> <player>", "Remove a sub-teacher.", "/class removesub ");
-        helpLine(sender, "/class &fsetlocation <name>", "Set the class location to where you stand.", "/class setlocation ");
+        helpLine(sender, "/class &fsetwarp <name>", "Set the class warp to where you stand.", "/class setwarp ");
         helpLine(sender, "/class &fsettime <name> <day> <time>", "Add a real-world day & time (e.g. monday 9am).", "/class settime ");
         helpLine(sender, "/class &fdeltime <name> <day> <time>", "Remove a real-world day & time.", "/class deltime ");
+        helpLine(sender, "/class &fsetduration <name> <length>", "Set how long a class runs (e.g. 1h, 90m, 45s).", "/class setduration ");
         helpLine(sender, "/class &freload", "Reload config.yml (settings and grades).", "/class reload");
     }
 
     private void Pager(CommandSender sender, int page, int max) {
-        TextComponent line = new TextComponent(format("&8&m-----&r  "));
+        TextComponent line = new TextComponent(format(""));
         if (page > 1) {
-            line.addExtra(button("&6[&f◀&6]", "&7Previous page", "/class help " + (page - 1), ClickEvent.Action.RUN_COMMAND));
+            line.addExtra(button("&e\u00ab Prev", "&7Go to page " + (page - 1), "/class help " + (page - 1), ClickEvent.Action.RUN_COMMAND));
         } else {
-            line.addExtra(new TextComponent(format("&8[◀]")));
+            line.addExtra(new TextComponent(format("&8\u00ab Prev")));
         }
-        line.addExtra(new TextComponent(format("  &7Page &e" + page + "&7/&e" + max + "  ")));
+        line.addExtra(new TextComponent(format("  &8|  &7Page &e" + page + "&7/&e" + max + "  &8|  ")));
         if (page < max) {
-            line.addExtra(button("&6[&f▶&6]", "&7Next page", "/class help " + (page + 1), ClickEvent.Action.RUN_COMMAND));
+            line.addExtra(button("&eNext \u00bb", "&7Go to page " + (page + 1), "/class help " + (page + 1), ClickEvent.Action.RUN_COMMAND));
         } else {
-            line.addExtra(new TextComponent(format("&8[▶]")));
+            line.addExtra(new TextComponent(format("&8Next \u00bb")));
         }
-        line.addExtra(new TextComponent(format("  &8&m-----")));
         sender.spigot().sendMessage(line);
     }
 
@@ -196,10 +198,10 @@ public class Libs {
             return;
         }
         String name = room.getName();
-        TextComponent line = new TextComponent(format("&8[&6VClasses&8] &e" + name + " &ais starting now! "));
+        TextComponent line = new TextComponent(format("&8[&6VClassroom&8] &e" + name + " &ais starting now! "));
         TextComponent join = new TextComponent(format("&8[&aClick to Join&8]"));
         join.setHoverEvent(new HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT,
-                new ComponentBuilder(format("&7Teleport in and join &e" + name)).create()));
+                new ComponentBuilder(format("&7Join &e" + name + " &7- you'll be brought in when it begins")).create()));
         join.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/class join " + room.getId()));
         line.addExtra(join);
 
@@ -214,23 +216,31 @@ public class Libs {
     }
 
     public void PluginInformation(CommandSender sender) {
-        TextComponent msg = new TextComponent(format("&a" + this.cmdstarter + "&b[Wiki] "));
-        msg.setHoverEvent(new HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new Content[]{new Text(format("&6VenturaClasses Wiki Page \n\n&7Website URL: \n&6" + this.cmdstarter + "&e&nhttps://bookofventura.net/wiki"))}));
-        msg.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://bookofventura.net/wiki"));
-        TextComponent msg2 = new TextComponent(format("&6[VenturaClasses] "));
-        msg2.setHoverEvent(new HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new Content[]{new Text(format("&6VenturaClasses Help Page \n\n&7Click Command: \n&6" + this.cmdstarter + "&e&n/class"))}));
-        msg2.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/class"));
-        TextComponent msg3 = new TextComponent(format("&f[GitHub] "));
-        msg3.setHoverEvent(new HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new Content[]{new Text(format("&6VenturaClasses GitHub Page \n\n&7Website URL: \n&6" + this.cmdstarter + "&e&nhttps://github.com/Ash10744/VenturaClasses"))}));
-        msg3.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/Ash10744/VenturaClasses"));
-        msg.addExtra(msg2);
-        msg2.addExtra(msg3);
-        sender.spigot().sendMessage(msg);
+        TextComponent wiki = link("&b[Spigot]", "&6VenturaClassroom Wiki\n\n&7Open: &e&nhttps://bookofventura.net/wiki",
+                "https://bookofventura.net/wiki", ClickEvent.Action.OPEN_URL);
+        TextComponent help = link("&6[VenturaClassroom]", "&6VenturaClassroom Help\n\n&7Run: &e&n/class",
+                "/class", ClickEvent.Action.RUN_COMMAND);
+        TextComponent discord = link("&9[Discord]", "&6VenturaClassroom Support Server\n\n&7Join: &e&nhttps://bookofventura.net/discord",
+                "https://bookofventura.net/discord", ClickEvent.Action.OPEN_URL);
+        TextComponent github = link("&f[GitHub]", "&6VenturaClassroom GitHub\n\n&7Open: &e&nhttps://github.com/Ash10744/VenturaClassroom",
+                "https://github.com/Ash10744/VenturaClassroom", ClickEvent.Action.OPEN_URL);
+        wiki.addExtra(help);
+        help.addExtra(discord);
+        discord.addExtra(github);
+        sender.spigot().sendMessage(wiki);
+    }
+
+    private TextComponent link(String label, String hover, String target, ClickEvent.Action action) {
+        TextComponent c = new TextComponent(format("&6" + this.cmdstarter + label + " "));
+        c.setHoverEvent(new HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT,
+                new ComponentBuilder(format(hover)).create()));
+        c.setClickEvent(new ClickEvent(action, target));
+        return c;
     }
 
     public void MCTitle(CommandSender sender) {
         String Version = this.Version();
-        Libs.ChatComponent msg = new Libs.ChatComponent("&6VenturaClasses-" + Version + this.spacer + "&eHelp Menu" + this.spacer + "&6Author: &eAsh10744 ");
+        Libs.ChatComponent msg = new Libs.ChatComponent("&6VenturaClassroom-" + Version + this.spacer + "&eHelp Menu" + this.spacer + "&6Author: &eAsh10744 ");
         msg.addHoverMessage("&7A classroom system for your server");
         sender.spigot().sendMessage(msg.getComponent());
     }

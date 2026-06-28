@@ -1,7 +1,7 @@
 default-capacity: 30
 announce-start: true
 title-on-start: true
-teleport-on-join: true
+teleport-on-join: false
 enable-economy: true
 
 # Grades used by /class grade and /class dismiss.

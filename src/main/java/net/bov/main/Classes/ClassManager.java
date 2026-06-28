@@ -1,6 +1,5 @@
 package net.bov.main.Classes;
 
-import net.bov.main.Integrations.EconomyHook;
 import net.bov.main.Libs.Libs;
 import net.bov.main.VenturaClassroom;
 import org.bukkit.Bukkit;
@@ -36,6 +35,7 @@ public class ClassManager {
 
     private final Map<String, Classroom> classes = new LinkedHashMap<>();
     private final Map<String, String> lastTrigger = new HashMap<>();
+    private final Map<String, BukkitTask> endTasks = new HashMap<>();
 
     private BukkitTask task;
 
@@ -59,6 +59,7 @@ public class ClassManager {
                 Classroom room = new Classroom(id);
                 room.setName(this.config.getString(base + ".name", id));
                 room.setCapacity(this.config.getInt(base + ".capacity", 30));
+                room.setDurationSeconds(this.config.getInt(base + ".duration", 0));
 
                 String teacher = this.config.getString(base + ".teacher", null);
                 if (teacher != null && !teacher.isEmpty()) {
@@ -92,6 +93,7 @@ public class ClassManager {
             String base = "classes." + room.getId();
             out.set(base + ".name", room.getName());
             out.set(base + ".capacity", room.getCapacity());
+            out.set(base + ".duration", room.getDurationSeconds());
             out.set(base + ".teacher", room.getTeacher() == null ? null : room.getTeacher().toString());
             List<String> subs = new ArrayList<>();
             for (UUID u : room.getSubTeachers()) {
@@ -208,11 +210,40 @@ public class ClassManager {
         room.setInSession(true);
         room.setJoinable(true);
         Libs.broadcastClassStart(room);
+        scheduleAutoEnd(room);
+    }
+
+    public void beginClass(Classroom room) {
+        room.setJoinable(false);
+        if (room.getLocation() != null) {
+            for (UUID id : room.getStudents()) {
+                Player p = Bukkit.getPlayer(id);
+                if (p != null && p.isOnline()) {
+                    p.teleport(room.getLocation());
+                }
+            }
+        }
+    }
+
+    private void scheduleAutoEnd(Classroom room) {
+        BukkitTask existing = this.endTasks.remove(room.getId().toLowerCase());
+        if (existing != null) {
+            existing.cancel();
+        }
+        int dur = room.getDurationSeconds();
+        if (dur > 0) {
+            BukkitTask t = Bukkit.getScheduler().runTaskLater(this.plugin, () -> endClass(room), dur * 20L);
+            this.endTasks.put(room.getId().toLowerCase(), t);
+        }
     }
 
     public void endClass(Classroom room) {
         room.setInSession(false);
         room.setJoinable(false);
+        BukkitTask t = this.endTasks.remove(room.getId().toLowerCase());
+        if (t != null) {
+            t.cancel();
+        }
     }
 
     public String join(Player player, Classroom room) {
@@ -229,7 +260,7 @@ public class ClassManager {
             return "full";
         }
         room.getStudents().add(player.getUniqueId());
-        if (room.getLocation() != null && this.plugin.getConfig().getBoolean("teleport-on-join", true)) {
+        if (room.getLocation() != null && this.plugin.getConfig().getBoolean("teleport-on-join", false)) {
             player.teleport(room.getLocation());
         }
         return "ok";
@@ -321,7 +352,7 @@ public class ClassManager {
         List<String> commands = cfg.getStringList(base + ".commands");
 
         if (money > 0 && cfg.getBoolean("enable-economy", true)) {
-            EconomyHook eco = this.plugin.getEconomyHook();
+            net.bov.main.Integrations.EconomyHook eco = this.plugin.getEconomyHook();
             if (eco != null && eco.available()) {
                 eco.deposit(student, money);
             }
@@ -329,6 +360,16 @@ public class ClassManager {
         if (xp > 0) {
             student.giveExp(xp);
         }
+        String rewardSummary = "";
+        if (money > 0 && cfg.getBoolean("enable-economy", true)) {
+            rewardSummary = "&a" + money + " coins";
+        }
+        if (xp > 0) {
+            rewardSummary = rewardSummary.isEmpty() ? ("&a" + xp + " XP") : (rewardSummary + "&7, &a" + xp + " XP");
+        }
+        String suffix = rewardSummary.isEmpty() ? "" : (" &7[" + rewardSummary + "&7]");
+        student.sendMessage(Libs.format("&8[&6VClassroom&8] &aYou were graded &6" + grade
+                + " &ain &e" + room.getName() + suffix + "&a."));
         if (message != null && !message.isEmpty()) {
             student.sendMessage(Libs.format(fill(message, student, room, grade, money, xp)));
         }
