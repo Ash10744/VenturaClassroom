@@ -1,5 +1,6 @@
 
 <img width="1909" height="824" alt="VenturaClassroom" src="https://github.com/user-attachments/assets/df65d2d8-aeca-409f-a8c4-deca11b482bc" />
+
 # VenturaClassroom
 
 Run real lessons on your server. Schedule classes by real-world day and time (or on a repeating timer), let students join with one click, then teleport everyone in, teach, and grade and dismiss them — with optional money and XP rewards. Comes with a month calendar, a click-through setup wizard, and a clean in-game help menu.
