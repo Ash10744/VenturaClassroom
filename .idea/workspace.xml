@@ -4,59 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6c9bebfc-a42e-4257-be36-0413607bed28" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/VenturaClasses.zip" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/VenturaClassroom.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/ClassManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/Classroom.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/SubmissionListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/SubmissionsMenu.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/TimeUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Commands/MainCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/GUI/CalendarListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/GUI/CalendarMenu.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Integrations/EconomyHook.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Integrations/VClassExpansion.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Libs/Libs.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/VenturaClassroom.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/config.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/VenturaClassroom-0.1-BETA-shaded.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/VenturaClassroom-0.1-BETA.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/VenturaClassroom-0.2-BETA.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/VenturaClassroom-1.0-SNAPSHOT.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/config.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/ClassManager.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/Classroom.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/EconomyHook.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/SubmissionListener.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/SubmissionsMenu.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/TimeUtil.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Commands/MainCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/GUI/CalendarListener.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/GUI/CalendarMenu.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Integrations/VClassExpansion.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Libs/Libs$ChatComponent.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Libs/Libs.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/VenturaClassroom.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/plugin.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/original-VenturaClassroom-0.1-BETA.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/original-VenturaClassroom-0.2-BETA.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/original-VenturaClassroom-1.0-SNAPSHOT.jar" afterDir="false" />
+    <list default="true" id="6c9bebfc-a42e-4257-be36-0413607bed28" name="Changes" comment="0.1 - Beta">
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/bov/main/Libs/Libs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Libs/Libs.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,6 +22,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "Ash10744"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Ash10744/VenturaClassroom.git",
+    "accountId": "d4b06c77-aa19-4108-9bc9-43bfb5a68c4a"
+  }
+}]]></component>
   <component name="ProjectColorInfo"><![CDATA[{
   "associatedIndex": 3
 }]]></component>
@@ -123,6 +84,19 @@
       <option name="presentableId" value="Default" />
       <updated>1782584340442</updated>
     </task>
+    <task id="LOCAL-00001" summary="0.1 - Beta">
+      <option name="closed" value="true" />
+      <created>1782611438788</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1782611438788</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="0.1 - Beta" />
+    <option name="LAST_COMMIT_MESSAGE" value="0.1 - Beta" />
   </component>
 </project>

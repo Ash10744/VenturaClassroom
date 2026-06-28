@@ -21,7 +21,7 @@ public class Libs {
     }
 
     public String NewLine = "\n";
-    public String Prefix = "&8[&6VClassroom&8] ";
+    public String Prefix = "&8[&6VClassrooms&8] ";
     public String cmdstarter = format("◊ ");
     public String spacer = format(" &8- ");
     public String CommandDivider = format("&8&m---------------------------------------------|>");
