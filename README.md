@@ -187,16 +187,6 @@ Teacher commands run for the class's **assigned teacher or assistant** (set with
 
 ---
 
-## Good to know
-
-Each class gets a **number** as its id, so you can have two classes with the same name (`Maths` id `1` and `Maths` id `2`). Refer to a class by its number or its name — if a name is shared by more than one class, the plugin will ask you to use the number.
-
-Scheduling runs on the **server's real-world clock**, so a class set for "Monday 9am" starts at 9am server time every Monday. Repeating timers (`every 1h`) count from when the class was set or the server started, not from the top of the hour.
-
-Money rewards need **Vault** and an economy plugin; without them, the money part of a grade is simply skipped and everything else still works.
-
----
-
 <img width="1562" height="1007" alt="899d187e-ec81-4f54-b5ec-394885bf580f" src="https://github.com/user-attachments/assets/0f55671e-24ef-46cc-bf9e-b7c9f3c33e72" />
 
 Need Support, Assistance or Help?
