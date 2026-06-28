@@ -36,6 +36,7 @@ public class ClassManager {
     private final Map<String, Classroom> classes = new LinkedHashMap<>();
     private final Map<String, String> lastTrigger = new HashMap<>();
     private final Map<String, BukkitTask> endTasks = new HashMap<>();
+    private final Map<String, Long> lastInterval = new HashMap<>();
 
     private BukkitTask task;
 
@@ -47,6 +48,7 @@ public class ClassManager {
     public void load() {
         this.classes.clear();
         this.lastTrigger.clear();
+        this.lastInterval.clear();
         if (!this.plugin.getDataFolder().exists()) {
             this.plugin.getDataFolder().mkdirs();
         }
@@ -60,6 +62,7 @@ public class ClassManager {
                 room.setName(this.config.getString(base + ".name", id));
                 room.setCapacity(this.config.getInt(base + ".capacity", 30));
                 room.setDurationSeconds(this.config.getInt(base + ".duration", 0));
+                room.setIntervalSeconds(this.config.getInt(base + ".interval", 0));
 
                 String teacher = this.config.getString(base + ".teacher", null);
                 if (teacher != null && !teacher.isEmpty()) {
@@ -94,6 +97,7 @@ public class ClassManager {
             out.set(base + ".name", room.getName());
             out.set(base + ".capacity", room.getCapacity());
             out.set(base + ".duration", room.getDurationSeconds());
+            out.set(base + ".interval", room.getIntervalSeconds());
             out.set(base + ".teacher", room.getTeacher() == null ? null : room.getTeacher().toString());
             List<String> subs = new ArrayList<>();
             for (UUID u : room.getSubTeachers()) {
@@ -165,6 +169,27 @@ public class ClassManager {
         return this.classes.values();
     }
 
+    public String nextId() {
+        int n = 1;
+        while (this.classes.containsKey(String.valueOf(n))) {
+            n++;
+        }
+        return String.valueOf(n);
+    }
+
+    public java.util.List<Classroom> byName(String name) {
+        java.util.List<Classroom> out = new ArrayList<>();
+        if (name == null) {
+            return out;
+        }
+        for (Classroom room : this.classes.values()) {
+            if (room.getName().equalsIgnoreCase(name)) {
+                out.add(room);
+            }
+        }
+        return out;
+    }
+
     public void start() {
         if (this.task != null) {
             this.task.cancel();
@@ -189,13 +214,26 @@ public class ClassManager {
             if (room.getLocation() == null || room.getLocation().getWorld() == null) {
                 continue;
             }
+            String idKey = room.getId().toLowerCase();
+            if (room.getIntervalSeconds() > 0) {
+                long nowMs = System.currentTimeMillis();
+                Long last = this.lastInterval.get(idKey);
+                if (last == null) {
+                    this.lastInterval.put(idKey, nowMs);
+                } else if (nowMs - last >= room.getIntervalSeconds() * 1000L) {
+                    this.lastInterval.put(idKey, nowMs);
+                    if (!room.isInSession()) {
+                        startClass(room);
+                    }
+                }
+            }
             for (ClassTime ct : room.getTimes()) {
                 if (ct.getDay() == today && ct.getTime().getHour() == hour && ct.getTime().getMinute() == minute) {
                     String key = ct.serialize();
-                    if (key.equals(this.lastTrigger.get(room.getId().toLowerCase()))) {
+                    if (key.equals(this.lastTrigger.get(idKey))) {
                         break;
                     }
-                    this.lastTrigger.put(room.getId().toLowerCase(), key);
+                    this.lastTrigger.put(idKey, key);
                     if (!room.isInSession()) {
                         startClass(room);
                     }
@@ -352,7 +390,7 @@ public class ClassManager {
         List<String> commands = cfg.getStringList(base + ".commands");
 
         if (money > 0 && cfg.getBoolean("enable-economy", true)) {
-            net.bov.main.Integrations.EconomyHook eco = this.plugin.getEconomyHook();
+            EconomyHook eco = this.plugin.getEconomyHook();
             if (eco != null && eco.available()) {
                 eco.deposit(student, money);
             }

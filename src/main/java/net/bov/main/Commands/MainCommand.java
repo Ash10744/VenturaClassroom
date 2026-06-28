@@ -234,15 +234,11 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                     nb.append(i > 1 ? " " : "").append(args[i]);
                 }
                 String display = nb.toString().trim();
-                String id = display.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]+", "_").replaceAll("^_+|_+$", "");
-                if (id.isEmpty()) {
-                    sender.sendMessage(Libs.format(Libs.Prefix + "&cThat name can't be turned into a class id. Use letters or numbers."));
+                if (display.isEmpty()) {
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&cPlease give the class a name."));
                     return true;
                 }
-                if (mgr().get(id) != null) {
-                    sender.sendMessage(Libs.format(Libs.Prefix + "&cA class with id &e" + id + " &calready exists."));
-                    return true;
-                }
+                String id = mgr().nextId();
                 Classroom room = mgr().create(id);
                 room.setName(display);
                 room.setCapacity(VenturaClassroom.getInstance().getConfig().getInt("default-capacity", 30));
@@ -360,8 +356,29 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                 if (!admin(sender)) return noPerm(sender);
                 Classroom room = need(sender, args, 1);
                 if (room == null) return true;
+                if (args.length >= 3 && args[2].equalsIgnoreCase("every")) {
+                    if (args.length < 4) {
+                        sender.sendMessage(Libs.format(Libs.Prefix + "&cUsage: /class settime <name> every <interval>  &7(e.g. 1h, 30m, 90s)"));
+                        return true;
+                    }
+                    if (args[3].equalsIgnoreCase("none") || args[3].equals("0")) {
+                        room.setIntervalSeconds(0);
+                        mgr().save();
+                        sender.sendMessage(Libs.format(Libs.Prefix + "&aCleared the repeating interval for &e" + room.getName() + "&a."));
+                        return true;
+                    }
+                    int secs = TimeUtil.parseDuration(args[3]);
+                    if (secs <= 0) {
+                        sender.sendMessage(Libs.format(Libs.Prefix + "&cInvalid interval. Try &e1h&c, &e30m&c or &e90s&c."));
+                        return true;
+                    }
+                    room.setIntervalSeconds(secs);
+                    mgr().save();
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&e" + room.getName() + " &awill run &eevery " + TimeUtil.formatDuration(secs) + "&a."));
+                    return true;
+                }
                 if (args.length < 4) {
-                    sender.sendMessage(Libs.format(Libs.Prefix + "&cUsage: /class settime <name> <day> <time>"));
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&cUsage: /class settime <name> <day> <time>  &7or  &e<name> every <interval>"));
                     sender.sendMessage(Libs.format(Libs.Prefix + "&7Day: &emonday-sunday, daily, weekdays, weekend&7. Time: &e9am, 2:30pm, 14:00"));
                     return true;
                 }
@@ -391,8 +408,14 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                 if (!admin(sender)) return noPerm(sender);
                 Classroom room = need(sender, args, 1);
                 if (room == null) return true;
+                if (args.length >= 3 && args[2].equalsIgnoreCase("every")) {
+                    room.setIntervalSeconds(0);
+                    mgr().save();
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&aCleared the repeating interval for &e" + room.getName() + "&a."));
+                    return true;
+                }
                 if (args.length < 4) {
-                    sender.sendMessage(Libs.format(Libs.Prefix + "&cUsage: /class deltime <name> <day> <time>"));
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&cUsage: /class deltime <name> <day> <time>  &7or  &e<name> every"));
                     return true;
                 }
                 java.util.Set<java.time.DayOfWeek> days = TimeUtil.parseDays(args[2]);
@@ -594,7 +617,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
     private void info(CommandSender sender, Classroom room) {
         sender.sendMessage(Libs.format("&8&m---------------------------------------------|>"));
         sender.sendMessage(Libs.format("&6  " + room.getName() + " &7(id: &e" + room.getId() + "&7)"));
-        sender.sendMessage(Libs.format("&8&m- - - - - - - - - - - - - - - - - - - - - - - -"));
+        sender.sendMessage("");
         String teacher = room.getTeacher() == null ? "&cnone" : "&e" + nameOf(room.getTeacher());
         sender.sendMessage(Libs.format("&7Teacher: " + teacher));
         if (!room.getSubTeachers().isEmpty()) {
@@ -611,9 +634,26 @@ public class MainCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(Libs.format("&7Status: " + status));
         sender.sendMessage(Libs.format("&7Duration: &e"
                 + (room.getDurationSeconds() > 0 ? TimeUtil.formatDuration(room.getDurationSeconds()) : "until ended")));
-        sender.sendMessage(Libs.format("&7Warp: " + (room.getLocation() != null ? "&aset" : "&cnot set")));
+        if (room.getLocation() == null) {
+            sender.sendMessage(Libs.format("&7Warp: &cnot set"));
+        } else if (sender instanceof Player && staff(sender, room)) {
+            net.md_5.bungee.api.chat.TextComponent warp = new net.md_5.bungee.api.chat.TextComponent(Libs.format("&7Warp: "));
+            net.md_5.bungee.api.chat.TextComponent set = new net.md_5.bungee.api.chat.TextComponent(Libs.format("&a[LOCATION SET]"));
+            set.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT,
+                    new net.md_5.bungee.api.chat.ComponentBuilder(Libs.format("&7Click to teleport to &e" + room.getName())).create()));
+            set.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(net.md_5.bungee.api.chat.ClickEvent.Action.RUN_COMMAND, "/class warp " + room.getId()));
+            warp.addExtra(set);
+            ((Player) sender).spigot().sendMessage(warp);
+        } else {
+            sender.sendMessage(Libs.format("&7Warp: &aset"));
+        }
+        if (room.getIntervalSeconds() > 0) {
+            sender.sendMessage(Libs.format("&7Repeats: &eevery " + TimeUtil.formatDuration(room.getIntervalSeconds())));
+        }
         if (room.getTimes().isEmpty()) {
-            sender.sendMessage(Libs.format("&7Schedule: &cnone set"));
+            if (room.getIntervalSeconds() <= 0) {
+                sender.sendMessage(Libs.format("&7Schedule: &cnone set"));
+            }
         } else {
             sender.sendMessage(Libs.format("&7Schedule:"));
             java.util.Map<java.time.DayOfWeek, java.util.List<java.time.LocalTime>> byDay = new java.util.LinkedHashMap<>();
@@ -641,11 +681,25 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             sender.sendMessage(Libs.format(Libs.Prefix + "&cYou need to name a class. See &e/class list&c."));
             return null;
         }
-        Classroom room = mgr().get(args[index]);
-        if (room == null) {
-            sender.sendMessage(Libs.format(Libs.Prefix + "&cThere is no class called &e" + args[index] + "&c."));
+        String token = args[index];
+        Classroom room = mgr().get(token);
+        if (room != null) {
+            return room;
         }
-        return room;
+        java.util.List<Classroom> matches = mgr().byName(token);
+        if (matches.size() == 1) {
+            return matches.get(0);
+        }
+        if (matches.size() > 1) {
+            StringBuilder ids = new StringBuilder();
+            for (Classroom r : matches) {
+                ids.append(ids.length() > 0 ? "&7, &e" : "&e").append(r.getId());
+            }
+            sender.sendMessage(Libs.format(Libs.Prefix + "&cSeveral classes are named &e" + token + "&c. Use the id: " + ids + "&c."));
+            return null;
+        }
+        sender.sendMessage(Libs.format(Libs.Prefix + "&cThere is no class called &e" + token + "&c."));
+        return null;
     }
 
     private OfflinePlayer resolvePlayer(CommandSender sender, String[] args, int index) {
@@ -779,7 +833,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             String s = args[0].toLowerCase(Locale.ROOT);
             if (s.equals("settime") || s.equals("deltime")) {
                 return prefix(java.util.Arrays.asList("monday", "tuesday", "wednesday", "thursday",
-                        "friday", "saturday", "sunday", "daily", "weekdays", "weekend"), args[2]);
+                        "friday", "saturday", "sunday", "daily", "weekdays", "weekend", "every"), args[2]);
             }
             if (s.equals("setteacher") || s.equals("addsub") || s.equals("removesub") || s.equals("grade")) {
                 for (Player p : Bukkit.getOnlinePlayers()) {
@@ -800,6 +854,9 @@ public class MainCommand implements CommandExecutor, TabCompleter {
         if (args.length == 4) {
             String s = args[0].toLowerCase(Locale.ROOT);
             if (s.equals("settime") || s.equals("deltime")) {
+                if (args[2].equalsIgnoreCase("every")) {
+                    return prefix(java.util.Arrays.asList("30s", "90s", "30m", "1h", "2h", "none"), args[3]);
+                }
                 return prefix(java.util.Arrays.asList("6am", "9am", "noon", "2pm", "5pm", "8pm"), args[3]);
             }
             if (s.equals("grade")) {

@@ -19,6 +19,7 @@ public class Classroom {
     private Location location;
     private int capacity = 30;
     private int durationSeconds = 0;
+    private int intervalSeconds = 0;
     private final TreeSet<ClassTime> times = new TreeSet<>();
 
     private boolean inSession = false;
@@ -82,6 +83,14 @@ public class Classroom {
 
     public void setDurationSeconds(int durationSeconds) {
         this.durationSeconds = Math.max(0, durationSeconds);
+    }
+
+    public int getIntervalSeconds() {
+        return this.intervalSeconds;
+    }
+
+    public void setIntervalSeconds(int intervalSeconds) {
+        this.intervalSeconds = Math.max(0, intervalSeconds);
     }
 
     public TreeSet<ClassTime> getTimes() {

@@ -160,20 +160,14 @@ public class SetupWizard {
         }
         if (s.awaitingChat.equals("name")) {
             String display = message.trim();
-            String id = display.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]+", "_").replaceAll("^_+|_+$", "");
-            if (id.isEmpty()) {
-                send(player, Libs.format("&8[&6VClassroom&8] &cThat name can't be used. Type another name."));
-                return;
-            }
-            if (mgr().get(id) != null) {
-                send(player, Libs.format("&8[&6VClassroom&8] &cA class with id &e" + id + " &calready exists. Type another name."));
+            if (display.isEmpty()) {
+                send(player, Libs.format("&8[&6VClassroom&8] &cPlease type a name."));
                 return;
             }
             s.name = display;
-            s.id = id;
             s.awaitingChat = null;
             s.step = SetupSession.Step.TEACHER;
-            send(player, Libs.format("&8[&6VClassroom&8] &aName set to &e" + display + " &7(id: &e" + id + "&7)."));
+            send(player, Libs.format("&8[&6VClassroom&8] &aName set to &e" + display + "&7."));
             promptTeacher(player, s);
             return;
         }
@@ -299,10 +293,11 @@ public class SetupWizard {
 
     private void finish(Player player, SetupSession s) {
         this.sessions.remove(player.getUniqueId());
-        if (s.id == null || mgr().get(s.id) != null) {
-            send(player, Libs.format("&8[&6VClassroom&8] &cCould not create the class (name missing or taken). Start again with &e/class setup&c."));
+        if (s.name == null || s.name.trim().isEmpty()) {
+            send(player, Libs.format("&8[&6VClassroom&8] &cCould not create the class (no name). Start again with &e/class setup&c."));
             return;
         }
+        s.id = mgr().nextId();
         Classroom room = mgr().create(s.id);
         room.setName(s.name);
         room.setCapacity(this.plugin.getConfig().getInt("default-capacity", 30));

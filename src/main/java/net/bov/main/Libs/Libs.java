@@ -33,6 +33,14 @@ public class Libs {
         Bukkit.getServer().getConsoleSender().sendMessage(msg);
     }
 
+    private void blank(CommandSender sender) {
+        sender.sendMessage("");
+    }
+
+    private void line(CommandSender sender, String text) {
+        sender.sendMessage(format(text));
+    }
+
     public static class ChatComponent {
         TextComponent component;
 
@@ -48,7 +56,7 @@ public class Libs {
     }
 
     public void FormatHelp(CommandSender sender) {
-        ChatComponent header = new ChatComponent("&f&nAvailable Commands:&r &7[] = Required, &7<> = Optional\n\n&7&oHover / Click for Additional Information\n");
+        ChatComponent header = new ChatComponent("&f&nAvailable Commands:&r &7[] = Required, &7<> = Optional\n\n&7&oHover / Click for Additional Information");
         sender.spigot().sendMessage(header.getComponent());
     }
 
@@ -71,10 +79,11 @@ public class Libs {
             page = max;
         }
 
-        send(sender, CommandDivider);
+        line(sender, CommandDivider);
         MCTitle(sender);
-        send(sender, NewLine);
+        blank(sender);
         FormatHelp(sender);
+        blank(sender);
 
         switch (page) {
             case 2:
@@ -88,12 +97,12 @@ public class Libs {
                 break;
         }
 
-        send(sender, NewLine);
-        send(sender, CommandDivider);
+        blank(sender);
+        line(sender, CommandDivider);
         Pager(sender, page, max);
-        send(sender, CommandDivider);
+        line(sender, CommandDivider);
         PluginInformation(sender);
-        send(sender, CommandDivider);
+        line(sender, CommandDivider);
     }
 
     private void helpStudent(CommandSender sender) {
@@ -130,26 +139,37 @@ public class Libs {
         helpLine(sender, "/class &faddsub <name> <player>", "Add a sub-teacher (assistant).", "/class addsub ");
         helpLine(sender, "/class &fremovesub <name> <player>", "Remove a sub-teacher.", "/class removesub ");
         helpLine(sender, "/class &fsetwarp <name>", "Set the class warp to where you stand.", "/class setwarp ");
-        helpLine(sender, "/class &fsettime <name> <day> <time>", "Add a real-world day & time (e.g. monday 9am).", "/class settime ");
-        helpLine(sender, "/class &fdeltime <name> <day> <time>", "Remove a real-world day & time.", "/class deltime ");
+        helpLine(sender, "/class &fsettime <name> <day> <time>", "Add a day & time, or 'every <interval>' to repeat (e.g. every 1h).", "/class settime ");
+        helpLine(sender, "/class &fdeltime <name> <day> <time>", "Remove a day & time, or 'every' to stop repeating.", "/class deltime ");
         helpLine(sender, "/class &fsetduration <name> <length>", "Set how long a class runs (e.g. 1h, 90m, 45s).", "/class setduration ");
         helpLine(sender, "/class &freload", "Reload config.yml (settings and grades).", "/class reload");
     }
 
     private void Pager(CommandSender sender, int page, int max) {
-        TextComponent line = new TextComponent(format(""));
+        TextComponent row = new TextComponent("");
+
+        TextComponent prev;
         if (page > 1) {
-            line.addExtra(button("&e\u00ab Prev", "&7Go to page " + (page - 1), "/class help " + (page - 1), ClickEvent.Action.RUN_COMMAND));
+            prev = new TextComponent(format("&6" + this.cmdstarter + "\u00ab&e Prev"));
+            prev.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/class help " + (page - 1)));
         } else {
-            line.addExtra(new TextComponent(format("&8\u00ab Prev")));
+            prev = new TextComponent(format("&8" + this.cmdstarter + "\u00ab Prev"));
         }
-        line.addExtra(new TextComponent(format("  &8|  &7Page &e" + page + "&7/&e" + max + "  &8|  ")));
+
+        TextComponent sep = new TextComponent(format("&8  |  "));
+
+        TextComponent next;
         if (page < max) {
-            line.addExtra(button("&eNext \u00bb", "&7Go to page " + (page + 1), "/class help " + (page + 1), ClickEvent.Action.RUN_COMMAND));
+            next = new TextComponent(format("&eNext &6\u00bb"));
+            next.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/class help " + (page + 1)));
         } else {
-            line.addExtra(new TextComponent(format("&8Next \u00bb")));
+            next = new TextComponent(format("&8Next \u00bb"));
         }
-        sender.spigot().sendMessage(line);
+
+        row.addExtra(prev);
+        row.addExtra(sep);
+        row.addExtra(next);
+        sender.spigot().sendMessage(row);
     }
 
     private void helpLine(CommandSender sender, String command, String description, String suggest) {
@@ -216,31 +236,34 @@ public class Libs {
     }
 
     public void PluginInformation(CommandSender sender) {
-        TextComponent wiki = link("&b[Spigot]", "&6VenturaClassroom Wiki\n\n&7Open: &e&nhttps://bookofventura.net/wiki",
-                "https://bookofventura.net/wiki", ClickEvent.Action.OPEN_URL);
-        TextComponent help = link("&6[VenturaClassroom]", "&6VenturaClassroom Help\n\n&7Run: &e&n/class",
-                "/class", ClickEvent.Action.RUN_COMMAND);
-        TextComponent discord = link("&9[Discord]", "&6VenturaClassroom Support Server\n\n&7Join: &e&nhttps://bookofventura.net/discord",
-                "https://bookofventura.net/discord", ClickEvent.Action.OPEN_URL);
-        TextComponent github = link("&f[GitHub]", "&6VenturaClassroom GitHub\n\n&7Open: &e&nhttps://github.com/Ash10744/VenturaClassroom",
-                "https://github.com/Ash10744/VenturaClassroom", ClickEvent.Action.OPEN_URL);
-        wiki.addExtra(help);
-        help.addExtra(discord);
+        TextComponent wiki = new TextComponent(format("&a" + this.cmdstarter + "&b[Wiki] "));
+        wiki.setHoverEvent(new HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT,
+                new ComponentBuilder(format("&6VenturaClassroom Wiki \n\n&7Website URL: \n&6" + this.cmdstarter + "&e&nhttps://bookofventura.net/wiki")).create()));
+        wiki.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://bookofventura.net/wiki"));
+
+        TextComponent main = new TextComponent(format("&6[VenturaClassroom] "));
+        main.setHoverEvent(new HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT,
+                new ComponentBuilder(format("&6Open the Help Menu \n\n&7Click Command: \n&6" + this.cmdstarter + "&e&n/class help")).create()));
+        main.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/class help"));
+
+        TextComponent discord = new TextComponent(format("&e[Discord] "));
+        discord.setHoverEvent(new HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT,
+                new ComponentBuilder(format("&6Join the Discord \n\n&7Website URL: \n&6" + this.cmdstarter + "&e&nhttps://bookofventura.net/discord")).create()));
+        discord.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://bookofventura.net/discord"));
+
+        TextComponent github = new TextComponent(format("&f[GitHub] "));
+        github.setHoverEvent(new HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT,
+                new ComponentBuilder(format("&6VenturaClassroom GitHub \n\n&7Website URL: \n&6" + this.cmdstarter + "&e&nhttps://github.com/Ash10744/VenturaClassroom")).create()));
+        github.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/Ash10744/VenturaClassroom"));
+
+        wiki.addExtra(main);
+        main.addExtra(discord);
         discord.addExtra(github);
         sender.spigot().sendMessage(wiki);
     }
 
-    private TextComponent link(String label, String hover, String target, ClickEvent.Action action) {
-        TextComponent c = new TextComponent(format("&6" + this.cmdstarter + label + " "));
-        c.setHoverEvent(new HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT,
-                new ComponentBuilder(format(hover)).create()));
-        c.setClickEvent(new ClickEvent(action, target));
-        return c;
-    }
-
     public void MCTitle(CommandSender sender) {
-        String Version = this.Version();
-        Libs.ChatComponent msg = new Libs.ChatComponent("&6VenturaClassroom-" + Version + this.spacer + "&eHelp Menu" + this.spacer + "&6Author: &eAsh10744 ");
+        Libs.ChatComponent msg = new Libs.ChatComponent("&6VenturaClassroom-" + this.Version() + " &8- &eHelp Menu &8- &6Author: &eAsh10744");
         msg.addHoverMessage("&7A classroom system for your server");
         sender.spigot().sendMessage(msg.getComponent());
     }
