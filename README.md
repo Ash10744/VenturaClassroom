@@ -12,12 +12,11 @@ Run real lessons on your server. Schedule classes by real-world day and time (or
 - **Spigot or Paper 1.21 or newer**
 - **Java 21**
 
-Optional, only if you want the extra features:
+Optional, Extra features:
 
-- **[Vault](https://www.spigotmc.org/resources/vault.34315/)** + any economy plugin — for money rewards on grades
+- **[Vault](https://www.spigotmc.org/resources/vault.34315/)** + any economy plugin
 - **[PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/)** — for `%venturaclasses_...%` placeholders
 
-VenturaClassroom runs perfectly fine without either — those features just stay switched off.
 
 ---
 
