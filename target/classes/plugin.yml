@@ -1,5 +1,5 @@
 name: VenturaClassroom
-version: '0.7-BETA'
+version: '1.0'
 main: net.bov.main.VenturaClassroom
 api-version: '1.21'
 author: Ash10744

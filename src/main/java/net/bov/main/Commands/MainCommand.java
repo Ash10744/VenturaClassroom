@@ -213,7 +213,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                 if (room == null) return true;
                 if (!staff(sender, room)) return noStaff(sender);
                 ItemStack hand = player.getInventory().getItemInMainHand();
-                if (hand == null || hand.getType().isAir()) {
+                if (hand == null || hand.getType() == org.bukkit.Material.AIR) {
                     sender.sendMessage(Libs.format(Libs.Prefix + "&cHold the item you want to give first."));
                     return true;
                 }
@@ -575,7 +575,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                     return true;
                 }
                 ItemStack hand = player.getInventory().getItemInMainHand();
-                if (hand == null || hand.getType().isAir()) {
+                if (hand == null || hand.getType() == org.bukkit.Material.AIR) {
                     player.sendMessage(Libs.format(Libs.Prefix + "&cHold the work you want to submit (e.g. a written book)."));
                     return true;
                 }
@@ -687,6 +687,17 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             return room;
         }
         java.util.List<Classroom> matches = mgr().byName(token);
+        if (matches.isEmpty() && args.length > index + 1) {
+            StringBuilder nb = new StringBuilder();
+            for (int i = index; i < args.length; i++) {
+                nb.append(i > index ? " " : "").append(args[i]);
+            }
+            java.util.List<Classroom> joined = mgr().byName(nb.toString());
+            if (!joined.isEmpty()) {
+                matches = joined;
+                token = nb.toString();
+            }
+        }
         if (matches.size() == 1) {
             return matches.get(0);
         }

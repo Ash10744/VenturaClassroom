@@ -18,10 +18,8 @@ public class Libs {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
-    public String NewLine = "\n";
     public String Prefix = "&8[&6VClassroom&8] ";
     public String cmdstarter = format("◊ ");
-    public String spacer = format(" &8- ");
     public String CommandDivider = format("&8&m---------------------------------------------|>");
     public String NoPermission = format("&8[] &cYou do not have permission to use this command");
     public String console = format("&cYou must be online to run this command");
@@ -236,10 +234,10 @@ public class Libs {
     }
 
     public void PluginInformation(CommandSender sender) {
-        TextComponent wiki = new TextComponent(format("&a" + this.cmdstarter + "&b[Wiki] "));
+        TextComponent wiki = new TextComponent(format("&a" + this.cmdstarter + "&b[Spigot] "));
         wiki.setHoverEvent(new HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT,
-                new ComponentBuilder(format("&6VenturaClassroom Wiki \n\n&7Website URL: \n&6" + this.cmdstarter + "&e&nhttps://bookofventura.net/wiki")).create()));
-        wiki.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://bookofventura.net/wiki"));
+                new ComponentBuilder(format("&6VenturaClassroom Wiki \n\n&7Website URL: \n&6" + this.cmdstarter + "&e&nhttps://www.spigotmc.org/resources/authors/ash10744.213894/")).create()));
+        wiki.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.spigotmc.org/resources/authors/ash10744.213894/"));
 
         TextComponent main = new TextComponent(format("&6[VenturaClassroom] "));
         main.setHoverEvent(new HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT,

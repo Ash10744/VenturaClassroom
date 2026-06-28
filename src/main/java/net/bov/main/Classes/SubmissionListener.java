@@ -22,13 +22,13 @@ public class SubmissionListener implements Listener {
         }
 
         ItemStack clicked = event.getCurrentItem();
-        if (clicked == null || clicked.getType().isAir()) {
+        if (clicked == null || clicked.getType() == org.bukkit.Material.AIR) {
             return;
         }
         if (event.getWhoClicked() instanceof Player) {
             Player p = (Player) event.getWhoClicked();
             p.getInventory().addItem(clicked.clone());
-            p.sendMessage(Libs.format("&8[&6VClasses&8] &aCopied that submission to your inventory."));
+            p.sendMessage(Libs.format("&8[&6VClassroom&8] &aCopied that submission to your inventory."));
         }
     }
 }
