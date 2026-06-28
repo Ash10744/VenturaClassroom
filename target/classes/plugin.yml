@@ -1,0 +1,24 @@
+name: VenturaClasses
+version: '0.2-BETA'
+main: net.bov.main.VenturaClassroom
+api-version: '1.21'
+author: Ash10744
+description: A classroom system for your server.
+softdepend: [Vault, PlaceholderAPI]
+
+commands:
+  class:
+    description: Main command for VenturaClasses
+    usage: /<command>
+    aliases: [classes, vclass]
+
+permissions:
+  venturaclasses.use:
+    description: Join and view classes
+    default: true
+  venturaclasses.teacher:
+    description: Run a class you are assigned to
+    default: op
+  venturaclasses.admin:
+    description: Create and configure classes
+    default: op

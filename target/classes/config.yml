@@ -1,0 +1,5 @@
+default-capacity: 30
+announce-start: true
+title-on-start: true
+teleport-on-join: true
+enable-economy: true

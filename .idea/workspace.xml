@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6c9bebfc-a42e-4257-be36-0413607bed28" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VenturaClasses.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VenturaClassroom.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/ClassManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/Classroom.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/SubmissionListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/SubmissionsMenu.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/TimeUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Commands/MainCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/GUI/CalendarListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/GUI/CalendarMenu.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Integrations/EconomyHook.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Integrations/VClassExpansion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Libs/Libs.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/VenturaClassroom.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/config.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/VenturaClassroom-0.1-BETA-shaded.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/VenturaClassroom-0.1-BETA.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/VenturaClassroom-0.2-BETA.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/VenturaClassroom-1.0-SNAPSHOT.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/config.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/ClassManager.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/Classroom.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/EconomyHook.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/SubmissionListener.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/SubmissionsMenu.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/TimeUtil.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Commands/MainCommand.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/GUI/CalendarListener.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/GUI/CalendarMenu.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Integrations/VClassExpansion.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Libs/Libs$ChatComponent.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Libs/Libs.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/net/bov/main/VenturaClassroom.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/plugin.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/original-VenturaClassroom-0.1-BETA.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/original-VenturaClassroom-0.2-BETA.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/original-VenturaClassroom-1.0-SNAPSHOT.jar" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 3
+}]]></component>
+  <component name="ProjectId" id="3FjN5vSBisnSMDx0ymfwvkgV1JD" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.VenturaClassroom [package].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="mcdev-temp-root" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="mcdev-temp-root" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6c9bebfc-a42e-4257-be36-0413607bed28" name="Changes" comment="" />
+      <created>1782584340442</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1782584340442</updated>
+    </task>
+    <servers />
+  </component>
+</project>
