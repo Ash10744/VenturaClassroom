@@ -21,7 +21,7 @@ public class Libs {
     }
 
     public String NewLine = "\n";
-    public String Prefix = "&8[&6VClassrooms&8] ";
+    public String Prefix = "&8[&6VClasses&8] ";
     public String cmdstarter = format("◊ ");
     public String spacer = format(" &8- ");
     public String CommandDivider = format("&8&m---------------------------------------------|>");
@@ -110,8 +110,9 @@ public class Libs {
     private void helpTeacher(CommandSender sender) {
         helpLine(sender, "/class &fstart <name>", "Start your class now and open it for joining.", "/class start ");
         helpLine(sender, "/class &fend <name>", "End your class and dismiss the students.", "/class end ");
-        helpLine(sender, "/class &fgrade <name> <player> <grade>", "Give a student a grade, applied when you dismiss.", "/class grade ");
-        helpLine(sender, "/class &fdismiss <name> [grade]", "End the class and reward students by their grade.", "/class dismiss ");
+        helpLine(sender, "/class &fgrade <name> <player> <grade>", "Pre-set a student's grade, applied when you dismiss the class.", "/class grade ");
+        helpLine(sender, "/class &fdismiss <player>", "Open a grade menu to grade & dismiss one student.", "/class dismiss ");
+        helpLine(sender, "/class &fdismiss all <name>", "Dismiss everyone left, applying any grades you set.", "/class dismiss all ");
         helpLine(sender, "/class &flock <name>", "Stop new students joining (those inside stay).", "/class lock ");
         helpLine(sender, "/class &funlock <name>", "Allow students to join again.", "/class unlock ");
         helpLine(sender, "/class &fcapacity <name> <n>", "Change how many students can join.", "/class capacity ");
@@ -127,8 +128,8 @@ public class Libs {
         helpLine(sender, "/class &faddsub <name> <player>", "Add a sub-teacher (assistant).", "/class addsub ");
         helpLine(sender, "/class &fremovesub <name> <player>", "Remove a sub-teacher.", "/class removesub ");
         helpLine(sender, "/class &fsetlocation <name>", "Set the class location to where you stand.", "/class setlocation ");
-        helpLine(sender, "/class &fsettime <name> <time>", "Add a time the class runs (e.g. 9am).", "/class settime ");
-        helpLine(sender, "/class &fdeltime <name> <time>", "Remove a class time.", "/class deltime ");
+        helpLine(sender, "/class &fsettime <name> <day> <time>", "Add a real-world day & time (e.g. monday 9am).", "/class settime ");
+        helpLine(sender, "/class &fdeltime <name> <day> <time>", "Remove a real-world day & time.", "/class deltime ");
         helpLine(sender, "/class &freload", "Reload config.yml (settings and grades).", "/class reload");
     }
 

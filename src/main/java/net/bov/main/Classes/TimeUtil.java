@@ -1,8 +1,11 @@
 package net.bov.main.Classes;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.LocalTime;
+import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,45 +17,23 @@ public final class TimeUtil {
     private TimeUtil() {
     }
 
-    public static int normalize(int ticks) {
-        int t = ticks % 24000;
-        if (t < 0) {
-            t += 24000;
-        }
-        return t;
-    }
-
-    public static int parseTime(String input) {
+    public static LocalTime parseClock(String input) {
         if (input == null) {
-            return -1;
+            return null;
         }
         String s = input.trim().toLowerCase(Locale.ROOT);
-        switch (s) {
-            case "dawn":
-            case "sunrise":
-            case "morning":
-                return 0;
-            case "noon":
-            case "midday":
-                return 6000;
-            case "dusk":
-            case "sunset":
-            case "evening":
-                return 12000;
-            case "night":
-                return 13000;
-            case "midnight":
-                return 18000;
-            default:
-                break;
+        if (s.equals("noon") || s.equals("midday")) {
+            return LocalTime.of(12, 0);
         }
-
+        if (s.equals("midnight")) {
+            return LocalTime.of(0, 0);
+        }
         Matcher m = AMPM.matcher(s);
         if (m.matches()) {
             int hour = Integer.parseInt(m.group(1));
             int min = m.group(2) == null ? 0 : Integer.parseInt(m.group(2));
             if (hour < 1 || hour > 12 || min > 59) {
-                return -1;
+                return null;
             }
             if (m.group(3).equals("am")) {
                 if (hour == 12) {
@@ -61,63 +42,115 @@ public final class TimeUtil {
             } else if (hour != 12) {
                 hour += 12;
             }
-            return clockToTicks(hour, min);
+            return LocalTime.of(hour, min);
         }
-
         m = HHMM.matcher(s);
         if (m.matches()) {
             int hour = Integer.parseInt(m.group(1));
             int min = Integer.parseInt(m.group(2));
             if (hour > 23 || min > 59) {
-                return -1;
+                return null;
             }
-            return clockToTicks(hour, min);
+            return LocalTime.of(hour, min);
         }
-
-        try {
-            int t = Integer.parseInt(s);
-            if (t >= 0 && t < 24000) {
-                return t;
-            }
-        } catch (NumberFormatException ignored) {
-        }
-        return -1;
+        return null;
     }
 
-    private static int clockToTicks(int hour24, int minute) {
-        return normalize(((hour24 - 6) * 1000) + (minute * 1000 / 60));
-    }
-
-    public static String ticksToClock(int ticks) {
-        int t = normalize(ticks);
-        int clockMin = (int) Math.round(360 + t * 0.06) % 1440;
-        int hour24 = clockMin / 60;
-        int min = clockMin % 60;
-        String ap = hour24 < 12 ? "am" : "pm";
-        int h12 = hour24 % 12;
+    public static String formatClock(LocalTime time) {
+        int h = time.getHour();
+        int min = time.getMinute();
+        String ap = h < 12 ? "am" : "pm";
+        int h12 = h % 12;
         if (h12 == 0) {
             h12 = 12;
         }
         return String.format("%d:%02d%s", h12, min, ap);
     }
 
-    /** Ticks from `now` until the next occurrence of `target` in a 24000-tick day. */
-    public static int ticksUntil(int now, int target) {
-        int diff = normalize(target) - normalize(now);
-        if (diff < 0) {
-            diff += 24000;
+    public static DayOfWeek parseDay(String input) {
+        if (input == null) {
+            return null;
         }
-        return diff;
+        switch (input.trim().toUpperCase(Locale.ROOT)) {
+            case "MON": case "MONDAY": return DayOfWeek.MONDAY;
+            case "TUE": case "TUES": case "TUESDAY": return DayOfWeek.TUESDAY;
+            case "WED": case "WEDS": case "WEDNESDAY": return DayOfWeek.WEDNESDAY;
+            case "THU": case "THUR": case "THURS": case "THURSDAY": return DayOfWeek.THURSDAY;
+            case "FRI": case "FRIDAY": return DayOfWeek.FRIDAY;
+            case "SAT": case "SATURDAY": return DayOfWeek.SATURDAY;
+            case "SUN": case "SUNDAY": return DayOfWeek.SUNDAY;
+            default: return null;
+        }
     }
 
-    /** Rough real-seconds for a tick span (20 in-game ticks per real second). */
-    public static String prettyDuration(int ticks) {
-        int totalSeconds = ticks / 20;
-        int minutes = totalSeconds / 60;
-        int seconds = totalSeconds % 60;
-        if (minutes <= 0) {
-            return seconds + "s";
+    public static Set<DayOfWeek> parseDays(String input) {
+        Set<DayOfWeek> out = new LinkedHashSet<>();
+        if (input == null) {
+            return out;
         }
-        return minutes + "m " + seconds + "s";
+        switch (input.trim().toLowerCase(Locale.ROOT)) {
+            case "daily":
+            case "everyday":
+            case "all":
+                for (DayOfWeek d : DayOfWeek.values()) {
+                    out.add(d);
+                }
+                return out;
+            case "weekdays":
+            case "weekday":
+                out.add(DayOfWeek.MONDAY);
+                out.add(DayOfWeek.TUESDAY);
+                out.add(DayOfWeek.WEDNESDAY);
+                out.add(DayOfWeek.THURSDAY);
+                out.add(DayOfWeek.FRIDAY);
+                return out;
+            case "weekend":
+            case "weekends":
+                out.add(DayOfWeek.SATURDAY);
+                out.add(DayOfWeek.SUNDAY);
+                return out;
+            default:
+                break;
+        }
+        DayOfWeek single = parseDay(input);
+        if (single != null) {
+            out.add(single);
+        }
+        return out;
+    }
+
+    public static String dayShort(DayOfWeek day) {
+        switch (day) {
+            case MONDAY: return "Mon";
+            case TUESDAY: return "Tue";
+            case WEDNESDAY: return "Wed";
+            case THURSDAY: return "Thu";
+            case FRIDAY: return "Fri";
+            case SATURDAY: return "Sat";
+            case SUNDAY: return "Sun";
+            default: return day.name();
+        }
+    }
+
+    public static String prettyUntil(Duration duration) {
+        long total = duration.toMinutes();
+        if (total <= 0) {
+            return "now";
+        }
+        long days = total / 1440;
+        long rem = total % 1440;
+        long hours = rem / 60;
+        long mins = rem % 60;
+        StringBuilder sb = new StringBuilder();
+        if (days > 0) {
+            sb.append(days).append("d ");
+        }
+        if (hours > 0) {
+            sb.append(hours).append("h ");
+        }
+        if (mins > 0 || sb.length() == 0) {
+            sb.append(mins).append("m");
+        }
+        return sb.toString().trim();
     }
 }

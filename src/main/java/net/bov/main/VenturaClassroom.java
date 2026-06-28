@@ -2,7 +2,7 @@ package net.bov.main;
 
 import net.bov.main.Commands.MainCommand;
 import net.bov.main.Classes.ClassManager;
-import net.bov.main.Integrations.EconomyHook;
+import net.bov.main.Classes.EconomyHook;
 import net.bov.main.Integrations.VClassExpansion;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -38,6 +38,7 @@ public final class VenturaClassroom extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new net.bov.main.Classes.SubmissionListener(), this);
         getServer().getPluginManager().registerEvents(new net.bov.main.GUI.CalendarListener(), this);
+        getServer().getPluginManager().registerEvents(new net.bov.main.GUI.DismissListener(), this);
 
         if (getServer().getPluginManager().getPlugin("Vault") != null) {
             EconomyHook hook = new EconomyHook();

@@ -17,15 +17,15 @@ grades:
   B:
     money: 250.0
     xp: 20
-    message: "Grade B in %class%."
+    message: "&aGreat job! Grade B in %class%."
     commands: []
   C:
     money: 100.0
     xp: 10
-    message: "&eGrade C in %class%."
+    message: "&eGrade C in %class%. Keep practicing!"
     commands: []
   F:
     money: 0.0
     xp: 0
-    message: "&cGrade F in %class%.."
+    message: "&cGrade F in %class%. Please see your teacher."
     commands: []

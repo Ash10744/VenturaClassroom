@@ -1,6 +1,5 @@
 package net.bov.main.Classes;
 
-import net.bov.main.Integrations.EconomyHook;
 import net.bov.main.Libs.Libs;
 import net.bov.main.VenturaClassroom;
 import org.bukkit.Bukkit;
@@ -15,7 +14,11 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -24,14 +27,14 @@ import java.util.UUID;
 
 public class ClassManager {
 
-    private static final long CHECK_INTERVAL = 40L;
+    private static final long CHECK_INTERVAL = 100L;
 
     private final VenturaClassroom plugin;
     private final File file;
     private FileConfiguration config;
 
     private final Map<String, Classroom> classes = new LinkedHashMap<>();
-    private final Map<String, Integer> lastSlot = new HashMap<>();
+    private final Map<String, String> lastTrigger = new HashMap<>();
 
     private BukkitTask task;
 
@@ -42,7 +45,7 @@ public class ClassManager {
 
     public void load() {
         this.classes.clear();
-        this.lastSlot.clear();
+        this.lastTrigger.clear();
         if (!this.plugin.getDataFolder().exists()) {
             this.plugin.getDataFolder().mkdirs();
         }
@@ -69,8 +72,11 @@ public class ClassManager {
                     } catch (IllegalArgumentException ignored) {
                     }
                 }
-                for (int t : this.config.getIntegerList(base + ".times")) {
-                    room.getTimes().add(TimeUtil.normalize(t));
+                for (String raw : this.config.getStringList(base + ".times")) {
+                    ClassTime ct = ClassTime.deserialize(raw);
+                    if (ct != null) {
+                        room.getTimes().add(ct);
+                    }
                 }
                 room.setLocation(readLoc(base + ".location"));
                 this.classes.put(id.toLowerCase(), room);
@@ -91,7 +97,11 @@ public class ClassManager {
                 subs.add(u.toString());
             }
             out.set(base + ".subTeachers", subs);
-            out.set(base + ".times", new ArrayList<>(room.getTimes()));
+            List<String> times = new ArrayList<>();
+            for (ClassTime ct : room.getTimes()) {
+                times.add(ct.serialize());
+            }
+            out.set(base + ".times", times);
             writeLoc(out, base + ".location", room.getLocation());
         }
         try {
@@ -143,12 +153,12 @@ public class ClassManager {
     public void delete(String id) {
         Classroom removed = this.classes.remove(id.toLowerCase());
         if (removed != null) {
-            this.lastSlot.remove(id.toLowerCase());
+            this.lastTrigger.remove(id.toLowerCase());
             save();
         }
     }
 
-    public java.util.Collection<Classroom> all() {
+    public Collection<Classroom> all() {
         return this.classes.values();
     }
 
@@ -167,19 +177,27 @@ public class ClassManager {
     }
 
     private void tick() {
+        LocalDateTime now = LocalDateTime.now();
+        DayOfWeek today = now.getDayOfWeek();
+        int hour = now.getHour();
+        int minute = now.getMinute();
+
         for (Classroom room : this.classes.values()) {
-            if (room.getTimes().isEmpty() || room.getLocation() == null || room.getLocation().getWorld() == null) {
+            if (room.getLocation() == null || room.getLocation().getWorld() == null) {
                 continue;
             }
-            int now = (int) (room.getLocation().getWorld().getTime() % 24000L);
-            Integer floor = room.getTimes().floor(now);
-            if (floor == null) {
-                floor = room.getTimes().last();
-            }
-            Integer prev = this.lastSlot.get(room.getId().toLowerCase());
-            this.lastSlot.put(room.getId().toLowerCase(), floor);
-            if (prev != null && !prev.equals(floor) && !room.isInSession()) {
-                startClass(room);
+            for (ClassTime ct : room.getTimes()) {
+                if (ct.getDay() == today && ct.getTime().getHour() == hour && ct.getTime().getMinute() == minute) {
+                    String key = ct.serialize();
+                    if (key.equals(this.lastTrigger.get(room.getId().toLowerCase()))) {
+                        break;
+                    }
+                    this.lastTrigger.put(room.getId().toLowerCase(), key);
+                    if (!room.isInSession()) {
+                        startClass(room);
+                    }
+                    break;
+                }
             }
         }
     }
@@ -221,32 +239,35 @@ public class ClassManager {
     }
 
     public Classroom getNextClass() {
+        LocalDateTime now = LocalDateTime.now();
         Classroom best = null;
-        int bestWait = Integer.MAX_VALUE;
+        Duration bestWait = null;
         for (Classroom room : this.classes.values()) {
-            if (room.getTimes().isEmpty() || room.getLocation() == null || room.getLocation().getWorld() == null) {
-                continue;
-            }
-            int now = (int) (room.getLocation().getWorld().getTime() % 24000L);
-            for (int t : room.getTimes()) {
-                int wait = TimeUtil.ticksUntil(now, t);
-                if (wait < bestWait) {
-                    bestWait = wait;
-                    best = room;
-                }
+            Duration wait = waitFrom(room, now);
+            if (wait != null && (bestWait == null || wait.compareTo(bestWait) < 0)) {
+                bestWait = wait;
+                best = room;
             }
         }
         return best;
     }
 
-    public int waitUntilNext(Classroom room) {
-        if (room.getLocation() == null || room.getLocation().getWorld() == null || room.getTimes().isEmpty()) {
-            return -1;
-        }
-        int now = (int) (room.getLocation().getWorld().getTime() % 24000L);
-        int best = Integer.MAX_VALUE;
-        for (int t : room.getTimes()) {
-            best = Math.min(best, TimeUtil.ticksUntil(now, t));
+    public Duration waitUntilNext(Classroom room) {
+        return waitFrom(room, LocalDateTime.now());
+    }
+
+    private Duration waitFrom(Classroom room, LocalDateTime now) {
+        Duration best = null;
+        for (ClassTime ct : room.getTimes()) {
+            int dayDiff = (ct.getDay().getValue() - now.getDayOfWeek().getValue() + 7) % 7;
+            LocalDateTime candidate = now.toLocalDate().plusDays(dayDiff).atTime(ct.getTime());
+            if (candidate.isBefore(now)) {
+                candidate = candidate.plusDays(7);
+            }
+            Duration d = Duration.between(now, candidate);
+            if (best == null || d.compareTo(best) < 0) {
+                best = d;
+            }
         }
         return best;
     }

@@ -6,7 +6,7 @@
 
     <groupId>net.bov.main</groupId>
     <artifactId>VenturaClassroom</artifactId>
-    <version>0.2-BETA</version>
+    <version>0.5-BETA</version>
     <packaging>jar</packaging>
 
     <name>VenturaClasses</name>

@@ -5,6 +5,7 @@ import net.bov.main.Libs.Libs;
 import net.bov.main.Classes.ClassManager;
 import net.bov.main.Classes.Classroom;
 import net.bov.main.GUI.CalendarMenu;
+import net.bov.main.GUI.DismissMenu;
 import net.bov.main.Classes.SubmissionsMenu;
 import net.bov.main.Classes.TimeUtil;
 import org.bukkit.Bukkit;
@@ -54,9 +55,9 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage(Libs.format(Libs.Prefix + "&7There are no scheduled classes right now."));
                     return true;
                 }
-                int wait = mgr().waitUntilNext(room);
+                java.time.Duration wait = mgr().waitUntilNext(room);
                 sender.sendMessage(Libs.format(Libs.Prefix + "&6Next class: &e" + room.getName()
-                        + " &7in &a" + TimeUtil.prettyDuration(wait)
+                        + (wait == null ? "" : " &7in &a" + TimeUtil.prettyUntil(wait))
                         + (room.isInSession() ? " &7(&ain session now&7)" : "")));
                 return true;
             }
@@ -283,18 +284,30 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                 if (!admin(sender)) return noPerm(sender);
                 Classroom room = need(sender, args, 1);
                 if (room == null) return true;
-                if (args.length < 3) {
-                    sender.sendMessage(Libs.format(Libs.Prefix + "&cUsage: /class settime <name> <time>  (e.g. 9am)"));
+                if (args.length < 4) {
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&cUsage: /class settime <name> <day> <time>"));
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&7Day: &emonday-sunday, daily, weekdays, weekend&7. Time: &e9am, 2:30pm, 14:00"));
                     return true;
                 }
-                int ticks = TimeUtil.parseTime(args[2]);
-                if (ticks < 0) {
-                    sender.sendMessage(Libs.format(Libs.Prefix + "&cInvalid time. Try 9am, 14:30, noon or dusk."));
+                java.util.Set<java.time.DayOfWeek> days = TimeUtil.parseDays(args[2]);
+                if (days.isEmpty()) {
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&cUnknown day. Use monday-sunday, daily, weekdays or weekend."));
                     return true;
                 }
-                room.getTimes().add(ticks);
+                java.time.LocalTime time = TimeUtil.parseClock(args[3]);
+                if (time == null) {
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&cInvalid time. Try 9am, 2:30pm or 14:00."));
+                    return true;
+                }
+                for (java.time.DayOfWeek d : days) {
+                    room.getTimes().add(new net.bov.main.Classes.ClassTime(d, time));
+                }
                 mgr().save();
-                sender.sendMessage(Libs.format(Libs.Prefix + "&e" + room.getName() + " &awill run at &e" + TimeUtil.ticksToClock(ticks) + "&a."));
+                StringBuilder dn = new StringBuilder();
+                for (java.time.DayOfWeek d : days) {
+                    dn.append(dn.length() > 0 ? "&7, &e" : "&e").append(TimeUtil.dayShort(d));
+                }
+                sender.sendMessage(Libs.format(Libs.Prefix + "&e" + room.getName() + " &awill run on " + dn + " &aat &e" + TimeUtil.formatClock(time) + "&a."));
                 return true;
             }
 
@@ -302,16 +315,27 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                 if (!admin(sender)) return noPerm(sender);
                 Classroom room = need(sender, args, 1);
                 if (room == null) return true;
-                if (args.length < 3) {
-                    sender.sendMessage(Libs.format(Libs.Prefix + "&cUsage: /class deltime <name> <time>"));
+                if (args.length < 4) {
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&cUsage: /class deltime <name> <day> <time>"));
                     return true;
                 }
-                int ticks = TimeUtil.parseTime(args[2]);
-                if (ticks >= 0 && room.getTimes().remove(ticks)) {
+                java.util.Set<java.time.DayOfWeek> days = TimeUtil.parseDays(args[2]);
+                java.time.LocalTime time = TimeUtil.parseClock(args[3]);
+                if (days.isEmpty() || time == null) {
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&cUnknown day or time."));
+                    return true;
+                }
+                int removed = 0;
+                for (java.time.DayOfWeek d : days) {
+                    if (room.getTimes().remove(new net.bov.main.Classes.ClassTime(d, time))) {
+                        removed++;
+                    }
+                }
+                if (removed > 0) {
                     mgr().save();
-                    sender.sendMessage(Libs.format(Libs.Prefix + "&aRemoved the &e" + TimeUtil.ticksToClock(ticks) + " &atime."));
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&aRemoved &e" + removed + " &atime(s)."));
                 } else {
-                    sender.sendMessage(Libs.format(Libs.Prefix + "&cThat class has no time set for then."));
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&cThat class has no matching time."));
                 }
                 return true;
             }
@@ -353,60 +377,72 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             }
 
             case "dismiss": {
-                Classroom room = need(sender, args, 1);
-                if (room == null) return true;
-                if (!staff(sender, room)) return noStaff(sender);
-                if (room.getStudents().isEmpty()) {
-                    sender.sendMessage(Libs.format(Libs.Prefix + "&7There are no students to dismiss in &e" + room.getName() + "&7."));
+                if (args.length < 2) {
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&cUsage: /class dismiss <player>  &7or  &c/class dismiss all [class]"));
                     return true;
                 }
 
-                if (args.length >= 4) {
-                    Player target = Bukkit.getPlayerExact(args[2]);
-                    if (target == null || !room.getStudents().contains(target.getUniqueId())) {
-                        sender.sendMessage(Libs.format(Libs.Prefix + "&cThat player is not in the class."));
-                        return true;
-                    }
-                    String grade = mgr().resolveGrade(args[3]);
-                    if (grade == null) {
-                        sender.sendMessage(Libs.format(Libs.Prefix + "&cUnknown grade. Grades: &e" + String.join("&7, &e", mgr().gradeKeys())));
-                        return true;
-                    }
-                    mgr().applyGrade(target, room, grade);
-                    target.sendMessage(Libs.format(Libs.Prefix + "&eYou were dismissed from &6" + room.getName() + " &ewith grade &6" + grade + "&e."));
-                    room.getStudents().remove(target.getUniqueId());
-                    room.getGrades().remove(target.getUniqueId());
-                    sender.sendMessage(Libs.format(Libs.Prefix + "&aDismissed &e" + target.getName() + " &awith grade &6" + grade + "&a."));
-                    return true;
-                }
-
-                String forced = args.length >= 3 ? mgr().resolveGrade(args[2]) : null;
-                if (args.length >= 3 && forced == null) {
-                    sender.sendMessage(Libs.format(Libs.Prefix + "&cUnknown grade. Grades: &e" + String.join("&7, &e", mgr().gradeKeys())));
-                    return true;
-                }
-
-                int dismissed = 0;
-                for (UUID id : new ArrayList<>(room.getStudents())) {
-                    Player s = Bukkit.getPlayer(id);
-                    if (s == null || !s.isOnline()) {
-                        continue;
-                    }
-                    String grade = forced != null ? forced : room.getGrades().get(id);
-                    if (grade != null) {
-                        mgr().applyGrade(s, room, grade);
-                        s.sendMessage(Libs.format(Libs.Prefix + "&eClass dismissed: &6" + room.getName() + " &7(grade &6" + grade + "&7)"));
+                if (args[1].equalsIgnoreCase("all")) {
+                    Classroom room;
+                    if (args.length >= 3) {
+                        room = mgr().get(args[2]);
+                        if (room == null) {
+                            sender.sendMessage(Libs.format(Libs.Prefix + "&cThere is no class called &e" + args[2] + "&c."));
+                            return true;
+                        }
                     } else {
-                        s.sendMessage(Libs.format(Libs.Prefix + "&eClass dismissed: &6" + room.getName() + "&7."));
+                        room = findStaffClass(sender);
+                        if (room == null) {
+                            sender.sendMessage(Libs.format(Libs.Prefix + "&cName a class: &e/class dismiss all <class>"));
+                            return true;
+                        }
                     }
-                    dismissed++;
+                    if (!staff(sender, room)) return noStaff(sender);
+                    if (room.getStudents().isEmpty()) {
+                        sender.sendMessage(Libs.format(Libs.Prefix + "&7No students left to dismiss in &e" + room.getName() + "&7."));
+                        return true;
+                    }
+                    int dismissed = 0;
+                    for (UUID id : new ArrayList<>(room.getStudents())) {
+                        Player s = Bukkit.getPlayer(id);
+                        if (s == null || !s.isOnline()) {
+                            continue;
+                        }
+                        String grade = room.getGrades().get(id);
+                        if (grade != null) {
+                            mgr().applyGrade(s, room, grade);
+                            s.sendMessage(Libs.format(Libs.Prefix + "&eClass dismissed: &6" + room.getName() + " &7(grade &6" + grade + "&7)"));
+                        } else {
+                            s.sendMessage(Libs.format(Libs.Prefix + "&eClass dismissed: &6" + room.getName() + "&7."));
+                        }
+                        dismissed++;
+                    }
+                    room.getStudents().clear();
+                    room.getGrades().clear();
+                    mgr().endClass(room);
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&aDismissed the remaining &e" + dismissed + " &astudent(s) from &e" + room.getName() + "&a."));
+                    return true;
                 }
 
-                room.getStudents().clear();
-                room.getGrades().clear();
-                mgr().endClass(room);
-                sender.sendMessage(Libs.format(Libs.Prefix + "&aDismissed &e" + dismissed + " &astudent(s) from &e" + room.getName()
-                        + (forced != null ? " &awith grade &6" + forced + "&a." : "&a.")));
+                Player viewer = requirePlayer(sender);
+                if (viewer == null) return true;
+                Player target = Bukkit.getPlayerExact(args[1]);
+                if (target == null) {
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&c" + args[1] + " is not online."));
+                    return true;
+                }
+                Classroom room = null;
+                for (Classroom r : mgr().all()) {
+                    if (r.getStudents().contains(target.getUniqueId()) && staff(sender, r)) {
+                        room = r;
+                        break;
+                    }
+                }
+                if (room == null) {
+                    sender.sendMessage(Libs.format(Libs.Prefix + "&c" + target.getName() + " is not a student in one of your classes."));
+                    return true;
+                }
+                viewer.openInventory(new DismissMenu(room, target.getUniqueId(), target.getName()).getInventory());
                 return true;
             }
 
@@ -491,8 +527,8 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             sender.sendMessage(Libs.format("&7Times: &cnone set"));
         } else {
             StringBuilder sb = new StringBuilder();
-            for (int t : room.getTimes()) {
-                sb.append(sb.length() > 0 ? "&7, &e" : "&e").append(TimeUtil.ticksToClock(t));
+            for (net.bov.main.Classes.ClassTime t : room.getTimes()) {
+                sb.append(sb.length() > 0 ? "&7, &e" : "&e").append(TimeUtil.dayShort(t.getDay()) + " " + TimeUtil.formatClock(t.getTime()));
             }
             sender.sendMessage(Libs.format("&7Times: " + sb));
         }
@@ -626,6 +662,13 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             return prefix(subs, args[0]);
         }
         if (args.length == 2 && !args[0].equalsIgnoreCase("create")) {
+            if (args[0].equalsIgnoreCase("dismiss")) {
+                out.add("all");
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    out.add(p.getName());
+                }
+                return prefix(out, args[1]);
+            }
             for (Classroom room : mgr().all()) {
                 out.add(room.getId());
             }
@@ -634,7 +677,8 @@ public class MainCommand implements CommandExecutor, TabCompleter {
         if (args.length == 3) {
             String s = args[0].toLowerCase(Locale.ROOT);
             if (s.equals("settime") || s.equals("deltime")) {
-                return prefix(java.util.Arrays.asList("6am", "9am", "noon", "2pm", "5pm", "8pm"), args[2]);
+                return prefix(java.util.Arrays.asList("monday", "tuesday", "wednesday", "thursday",
+                        "friday", "saturday", "sunday", "daily", "weekdays", "weekend"), args[2]);
             }
             if (s.equals("setteacher") || s.equals("addsub") || s.equals("removesub") || s.equals("grade")) {
                 for (Player p : Bukkit.getOnlinePlayers()) {
@@ -642,17 +686,19 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                 }
                 return prefix(out, args[2]);
             }
-            if (s.equals("dismiss")) {
-                for (Player p : Bukkit.getOnlinePlayers()) {
-                    out.add(p.getName());
+            if (s.equals("dismiss") && args[1].equalsIgnoreCase("all")) {
+                for (Classroom room : mgr().all()) {
+                    out.add(room.getId());
                 }
-                out.addAll(mgr().gradeKeys());
                 return prefix(out, args[2]);
             }
         }
         if (args.length == 4) {
             String s = args[0].toLowerCase(Locale.ROOT);
-            if (s.equals("grade") || s.equals("dismiss")) {
+            if (s.equals("settime") || s.equals("deltime")) {
+                return prefix(java.util.Arrays.asList("6am", "9am", "noon", "2pm", "5pm", "8pm"), args[3]);
+            }
+            if (s.equals("grade")) {
                 return prefix(new ArrayList<>(mgr().gradeKeys()), args[3]);
             }
         }
