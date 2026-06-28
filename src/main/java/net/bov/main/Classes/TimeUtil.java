@@ -72,14 +72,33 @@ public final class TimeUtil {
             return null;
         }
         switch (input.trim().toUpperCase(Locale.ROOT)) {
-            case "MON": case "MONDAY": return DayOfWeek.MONDAY;
-            case "TUE": case "TUES": case "TUESDAY": return DayOfWeek.TUESDAY;
-            case "WED": case "WEDS": case "WEDNESDAY": return DayOfWeek.WEDNESDAY;
-            case "THU": case "THUR": case "THURS": case "THURSDAY": return DayOfWeek.THURSDAY;
-            case "FRI": case "FRIDAY": return DayOfWeek.FRIDAY;
-            case "SAT": case "SATURDAY": return DayOfWeek.SATURDAY;
-            case "SUN": case "SUNDAY": return DayOfWeek.SUNDAY;
-            default: return null;
+            case "MON":
+            case "MONDAY":
+                return DayOfWeek.MONDAY;
+            case "TUE":
+            case "TUES":
+            case "TUESDAY":
+                return DayOfWeek.TUESDAY;
+            case "WED":
+            case "WEDS":
+            case "WEDNESDAY":
+                return DayOfWeek.WEDNESDAY;
+            case "THU":
+            case "THUR":
+            case "THURS":
+            case "THURSDAY":
+                return DayOfWeek.THURSDAY;
+            case "FRI":
+            case "FRIDAY":
+                return DayOfWeek.FRIDAY;
+            case "SAT":
+            case "SATURDAY":
+                return DayOfWeek.SATURDAY;
+            case "SUN":
+            case "SUNDAY":
+                return DayOfWeek.SUNDAY;
+            default:
+                return null;
         }
     }
 
@@ -121,14 +140,22 @@ public final class TimeUtil {
 
     public static String dayShort(DayOfWeek day) {
         switch (day) {
-            case MONDAY: return "Mon";
-            case TUESDAY: return "Tue";
-            case WEDNESDAY: return "Wed";
-            case THURSDAY: return "Thu";
-            case FRIDAY: return "Fri";
-            case SATURDAY: return "Sat";
-            case SUNDAY: return "Sun";
-            default: return day.name();
+            case MONDAY:
+                return "Mon";
+            case TUESDAY:
+                return "Tue";
+            case WEDNESDAY:
+                return "Wed";
+            case THURSDAY:
+                return "Thu";
+            case FRIDAY:
+                return "Fri";
+            case SATURDAY:
+                return "Sat";
+            case SUNDAY:
+                return "Sun";
+            default:
+                return day.name();
         }
     }
 
@@ -152,5 +179,9 @@ public final class TimeUtil {
             sb.append(mins).append("m");
         }
         return sb.toString().trim();
+    }
+
+    public static String prettyDuration(Duration wait) {
+        return "";
     }
 }

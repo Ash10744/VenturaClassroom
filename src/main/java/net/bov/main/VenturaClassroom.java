@@ -2,7 +2,7 @@ package net.bov.main;
 
 import net.bov.main.Commands.MainCommand;
 import net.bov.main.Classes.ClassManager;
-import net.bov.main.Classes.EconomyHook;
+import net.bov.main.Integrations.EconomyHook;
 import net.bov.main.Integrations.VClassExpansion;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;

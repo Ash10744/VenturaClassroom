@@ -8,6 +8,8 @@ import net.bov.main.Classes.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
+import java.time.Duration;
+
 public class VClassExpansion extends PlaceholderExpansion {
 
     private final VenturaClassroom plugin;
@@ -61,8 +63,6 @@ public class VClassExpansion extends PlaceholderExpansion {
             if (room == null) {
                 return "None";
             }
-            int wait = mgr.waitUntilNext(room);
-            return wait < 0 ? "None" : TimeUtil.prettyDuration(wait);
         }
         if (p.startsWith("status_")) {
             Classroom room = mgr.get(p.substring(7));

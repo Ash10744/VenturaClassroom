@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6c9bebfc-a42e-4257-be36-0413607bed28" name="Changes" comment="0.1 - Beta" />
+    <list default="true" id="6c9bebfc-a42e-4257-be36-0413607bed28" name="Changes" comment="0.5 - CalendarGUI, and Class reschedule and dismissal grades and config update">
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/ClassManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/ClassManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/TimeUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/TimeUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/bov/main/VenturaClassroom.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/VenturaClassroom.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/plugin.yml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -90,11 +96,20 @@
       <option name="project" value="LOCAL" />
       <updated>1782611438788</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="0.5 - CalendarGUI, and Class reschedule and dismissal grades and config update">
+      <option name="closed" value="true" />
+      <created>1782640940833</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1782640940833</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="0.1 - Beta" />
-    <option name="LAST_COMMIT_MESSAGE" value="0.1 - Beta" />
+    <MESSAGE value="0.5 - CalendarGUI, and Class reschedule and dismissal grades and config update" />
+    <option name="LAST_COMMIT_MESSAGE" value="0.5 - CalendarGUI, and Class reschedule and dismissal grades and config update" />
   </component>
 </project>

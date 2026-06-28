@@ -1,5 +1,6 @@
 package net.bov.main.Classes;
 
+import net.bov.main.Integrations.EconomyHook;
 import net.bov.main.Libs.Libs;
 import net.bov.main.VenturaClassroom;
 import org.bukkit.Bukkit;

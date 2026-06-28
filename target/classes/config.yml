@@ -3,3 +3,29 @@ announce-start: true
 title-on-start: true
 teleport-on-join: true
 enable-economy: true
+
+# Grades used by /class grade and /class dismiss.
+# Each grade can give money (needs Vault), xp, a chat message, and run any
+# console commands. Placeholders: %player% %class% %grade% %money% %xp%
+grades:
+  A:
+    money: 500.0
+    xp: 30
+    message: "&aExcellent work! You earned an A in %class%."
+    commands:
+      - "give %player% diamond 2"
+  B:
+    money: 250.0
+    xp: 20
+    message: "&aGreat job! Grade B in %class%."
+    commands: []
+  C:
+    money: 100.0
+    xp: 10
+    message: "&eGrade C in %class%. Keep practicing!"
+    commands: []
+  F:
+    money: 0.0
+    xp: 0
+    message: "&cGrade F in %class%. Please see your teacher."
+    commands: []
