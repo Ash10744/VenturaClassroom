@@ -9,7 +9,7 @@ Run real lessons on your server. Schedule classes by real-world day and time (or
 
 ## Requirements
 
-- **Spigot or Paper 1.21 or newer**
+- **Spigot or Paper 1.16 or newer**
 - **Java 21**
 
 Optional, Extra features:
