@@ -246,8 +246,8 @@ public class Libs {
 
         TextComponent discord = new TextComponent(format("&e[Discord] "));
         discord.setHoverEvent(new HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT,
-                new ComponentBuilder(format("&6Join the Discord \n\n&7Website URL: \n&6" + this.cmdstarter + "&e&nhttps://bookofventura.net/discord")).create()));
-        discord.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://bookofventura.net/discord"));
+                new ComponentBuilder(format("&6Join the Discord \n\n&7Website URL: \n&6" + this.cmdstarter + "&e&nhttps://discord.gg/n3RuqxNZxg")).create()));
+        discord.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://discord.gg/n3RuqxNZxg"));
 
         TextComponent github = new TextComponent(format("&f[GitHub] "));
         github.setHoverEvent(new HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT,

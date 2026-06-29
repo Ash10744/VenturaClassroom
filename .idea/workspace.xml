@@ -4,19 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6c9bebfc-a42e-4257-be36-0413607bed28" name="Changes" comment="0.7 - CalendarGUI, and Class reschedule and  behavior and Libs changes.">
+    <list default="true" id="6c9bebfc-a42e-4257-be36-0413607bed28" name="Changes" comment="1.0 - 1.16 TO LATEST MC Support">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/ClassManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Classes/ClassManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/bov/main/Commands/MainCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Commands/MainCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/bov/main/Libs/Libs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/bov/main/Libs/Libs.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/ClassManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/ClassManager.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/Classroom.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/Classroom.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/SubmissionListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/SubmissionListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/SubmissionsMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/SubmissionsMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/TimeUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Classes/TimeUtil.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/Commands/MainCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Commands/MainCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/GUI/CalendarListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/GUI/CalendarListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/GUI/CalendarMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/GUI/CalendarMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/Integrations/VClassExpansion.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Integrations/VClassExpansion.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/Libs/Libs$ChatComponent.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Libs/Libs$ChatComponent.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/Libs/Libs.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/Libs/Libs.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/bov/main/VenturaClassroom.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/bov/main/VenturaClassroom.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/plugin.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,7 +147,23 @@
       <option name="project" value="LOCAL" />
       <updated>1782682534807</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="1.0 - 1.16 TO LATEST MC Support">
+      <option name="closed" value="true" />
+      <created>1782688988489</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1782688988489</updated>
+    </task>
+    <task id="LOCAL-00008" summary="1.0 - 1.16 TO LATEST MC Support">
+      <option name="closed" value="true" />
+      <created>1782689020232</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1782689020232</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -154,6 +174,7 @@
     <MESSAGE value="0.1 - Beta" />
     <MESSAGE value="0.5 - CalendarGUI, and Class reschedule and dismissal grades and config update" />
     <MESSAGE value="0.7 - CalendarGUI, and Class reschedule and  behavior and Libs changes." />
-    <option name="LAST_COMMIT_MESSAGE" value="0.7 - CalendarGUI, and Class reschedule and  behavior and Libs changes." />
+    <MESSAGE value="1.0 - 1.16 TO LATEST MC Support" />
+    <option name="LAST_COMMIT_MESSAGE" value="1.0 - 1.16 TO LATEST MC Support" />
   </component>
 </project>
